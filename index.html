@@ -36,7 +36,7 @@
 
 .actions {
   margin-top: auto;
-  display: flex;
+  display: contents;
   flex-direction: column;
   gap: 8px;
 }
@@ -242,6 +242,20 @@
   </div>
 
   <script>
+    function roiSectionTemplate(w) {
+return `
+<div class="roi-section">
+<div class="wc-divider"></div>
+<div class="wc-badge">ROI</div>
+${w.roi?.length ? `
+<button class="btn viewroi" data-roi-toggle="${w.id}">View ROI</button>
+<div class="wc-roi">${w.roi.map(r => `<div class="kpi">${r}</div>`).join('')}</div>
+` : `
+<div class="viewroi placeholder">ROI not available</div>
+`}
+</div>
+`;
+}
     // ---------- Data (apps use /icons/<key>.png) ----------
    const WORKERS = [
   {
@@ -413,7 +427,7 @@ const appsSection = `
         </div>
  <div class="actions">
   <div class="button-group">
-    <button class="btn" data-roi-toggle="${w.id}">View ROI</button>
+    <button class="viewroi" data-roi-toggle="${w.id}">View ROI</button>
     <button class="btn primary wide" data-onboard="${w.id}">On-Board</button>
   </div>
   ${usedBy}
