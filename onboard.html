@@ -5,29 +5,28 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Engini - Review & Activate Worker</title>
   <link rel="icon" type="image/png" href="image.png"/>
-<link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .list li {
+      background-color: var(--chip, #f1f5ff);
+      color: var(--chip-ink, #1f2937);
+      border: 1px solid var(--line, #e5e7eb);
+      border-radius: 9999px;
+      padding: 6px 12px;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+  </style>
 </head>
-<style>
-  .list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.list li {
-  background-color: var(--chip, #f1f5ff);
-  color: var(--chip-ink, #1f2937);
-  border: 1px solid var(--line, #e5e7eb);
-  border-radius: 9999px;
-  padding: 6px 12px;
-  font-size: 13px;
-  white-space: nowrap;
-}
-
-</style>
 <body>
   <!-- Header -->
   <header class="header">
@@ -35,15 +34,15 @@
       <div class="brand">
         <img src="logo.png" alt="Engini logo">
       </div>
-     <div class="progress" aria-label="progress">
-<span data-step="1"><span class="dot"></span> Select Worker</span>
-<span>›</span>
-<span data-step="2"><span class="dot"></span> Select Skills</span>
-<span>›</span>
-<span data-step="3" class="active"><span class="dot"></span> Onboard</span>
-<span>›</span>
-<span data-step="4"><span class="dot"></span> Chat Workspace</span>
-</div>
+      <div class="progress" aria-label="progress">
+        <span data-step="1"><span class="dot"></span> Select Worker</span>
+        <span>›</span>
+        <span data-step="2"><span class="dot"></span> Select Skills</span>
+        <span>›</span>
+        <span data-step="3" class="active"><span class="dot"></span> Onboard</span>
+        <span>›</span>
+        <span data-step="4"><span class="dot"></span> Chat Workspace</span>
+      </div>
       <button class="cta-sales" id="btnTalkSales">Talk to Sales</button>
     </div>
   </header>
@@ -53,10 +52,8 @@
     <p class="lead">Confirm the worker and selected Skills. Pricing updates are transparent and based on your selection.</p>
 
     <div class="layout">
-      <!-- LEFT: Review -->
       <section class="panel">
         <div class="inner">
-          <!-- Worker header -->
           <div class="worker-row">
             <img id="workerAvatar" class="avatar" src="" alt="worker"/>
             <div>
@@ -65,7 +62,6 @@
             </div>
           </div>
 
-          <!-- Skills list -->
           <div class="row-between" style="margin:6px 0 8px">
             <div class="muted"><b id="skillsCount">0</b> Skills selected</div>
             <a class="link" href="skills.html">Manage Skills</a>
@@ -81,21 +77,6 @@
           </div>
         </div>
       </section>
-
-      <!-- RIGHT: Summary -->
-      <aside class="panel summary">
-        <div class="inner">
-          <div style="font-weight:800">Pricing Summary</div>
-          <div class="row"><span class="label">Base (includes 5):</span><span id="priceBase" class="value">$2,000</span></div>
-          <div class="row"><span class="label">Extra skills:</span><span id="priceExtra" class="value">$0</span></div>
-          <hr style="border:none;border-top:1px solid var(--line);margin:10px 0">
-          <div class="row total"><span class="label">Total</span><span id="priceTotal" class="value">$2,000</span></div>
-
-          <div style="margin-top:10px">
-            <div class="muted" style="font-size:12px">Billing note: First 5 Skills are included in the base license. Each additional Skill adds $250/month.</div>
-          </div>
-        </div>
-      </aside>
     </div>
   </main>
 
@@ -141,17 +122,16 @@
           <input id="fRole" class="field" placeholder="Role/Title" autocomplete="organization-title">
         </div>
         <input id="fPass" class="field" type="password" placeholder="Password (min 6 chars)" autocomplete="new-password">
-<div style="display:flex;align-items:center;gap:8px;margin-top:10px">
-  <button class="sso" onclick="mockSSO()">Continue with SSO</button>
-  <span class="muted" style="font-size:12px">or</span>
-  <a 
-    href="https://app.engini.io/login?_gl=1*kzwknz*_ga*MTk1NzI5MjYwNS4xNzU2ODk2MzMz*_ga_ZP4XQNTD22*czE3NTkxNTU3ODEkbzM3JGcwJHQxNzU5MTU1NzgxJGo2MCRsMCRoMA..*_gcl_au*MjYyMDc0OTE2LjE3NTY4OTYzMzQ." 
-    class="ok"
-    style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center"
-  >
-    Create account & start
-  </a>
-</div>
+
+        <div style="display:flex;align-items:center;gap:8px;margin-top:10px">
+          <button class="sso" onclick="mockSSO()">Continue with SSO</button>
+          <span class="muted" style="font-size:12px">or</span>
+          <button class="ok" onclick="submitSignup()">Create account & start</button>
+        </div>
+
+        <a href="https://app.engini.io/login" class="muted" style="font-size:12px;text-align:center;display:block;margin-top:8px">
+          Already have an account? Log in
+        </a>
 
         <div id="signupError" class="muted" style="color:#b42318;margin-top:8px;display:none">Please fill all fields properly.</div>
       </div>
@@ -162,120 +142,116 @@
   </div>
 
   <script>
-    // ----- LocalStorage keys -----
     const LS = {
       WORKER:'engini.selectedWorker',
       SKILLS:'engini.selectedSkills',
       PRICING:'engini.pricing',
       SIGNUP:'engini.signup'
     };
-const STEP_URLS = { 1:'index.html', 2:'skills.html', 3:'onboard.html', 4:'chat.html' };
 
+    const STEP_URLS = { 1:'index.html', 2:'skills.html', 3:'onboard.html', 4:'chat.html' };
 
-function setActiveProgressByPath(){
-const path = (location.pathname || '').toLowerCase();
-let step = 1;
-if (path.includes('skills')) step = 2;
-else if (path.includes('onboard')) step = 3;
-else if (path.includes('chat')) step = 4;
-document.querySelectorAll('.progress [data-step]').forEach(el=>{
-el.classList.remove('active');
-if(Number(el.dataset.step) === step) el.classList.add('active');
-});
-}
+    function setActiveProgressByPath() {
+      const path = (location.pathname || '').toLowerCase();
+      let step = 1;
+      if (path.includes('skills')) step = 2;
+      else if (path.includes('onboard')) step = 3;
+      else if (path.includes('chat')) step = 4;
+      document.querySelectorAll('.progress [data-step]').forEach(el => {
+        el.classList.remove('active');
+        if (Number(el.dataset.step) === step) el.classList.add('active');
+      });
+    }
 
+    function wireProgressNav() {
+      document.querySelectorAll('.progress [data-step]').forEach(el => {
+        el.addEventListener('click', () => {
+          const step = Number(el.dataset.step);
+          const url = STEP_URLS[step] || 'index.html';
+          window.location.href = url;
+        });
+      });
+    }
 
-function wireProgressNav(){
-document.querySelectorAll('.progress [data-step]').forEach(el=>{
-el.addEventListener('click', ()=>{
-const step = Number(el.dataset.step);
-const url = STEP_URLS[step] || 'index.html';
-window.location.href = url;
-});
-});
-}
+    document.addEventListener('DOMContentLoaded', () => {
+      setActiveProgressByPath();
+      wireProgressNav();
+    });
 
+    function getLS(key, fallback = null) {
+      try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); } catch { return fallback; }
+    }
 
-document.addEventListener('DOMContentLoaded', () => {
-setActiveProgressByPath();
-wireProgressNav();
-});
-    function getLS(key, fallback=null){ try{ return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }catch{ return fallback; } }
-    function setLS(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+    function setLS(key, val) {
+      localStorage.setItem(key, JSON.stringify(val));
+    }
 
-    function uiAvatar(name){ return `https://ui-avatars.com/api/?name=${encodeURIComponent(name||'AI')}&background=E6EEF8&color=1B2A4A&size=96&bold=true`; }
-    function openModal(id){ document.getElementById(id).classList.add('show'); }
-    function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+    function uiAvatar(name) {
+      return `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'AI')}&background=E6EEF8&color=1B2A4A&size=96&bold=true`;
+    }
 
-    // ----- State -----
+    function openModal(id) {
+      document.getElementById(id).classList.add('show');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('show');
+    }
+
     const selWorker = getLS(LS.WORKER, null);
     const selectedSkills = getLS(LS.SKILLS, []);
-    const pricing = getLS(LS.PRICING, {base:2000, extra:0, total:2000, count:selectedSkills.length});
+    const pricing = getLS(LS.PRICING, { base: 2000, extra: 0, total: 2000, count: selectedSkills.length });
 
-    if(!selWorker){ location.href = 'index.html'; }
+    if (!selWorker) {
+      location.href = 'index.html';
+    }
 
-    // ----- Elements -----
-    document.getElementById('btnTalkSales').onclick = ()=> openModal('salesModal');
-    const workerName = document.getElementById('workerName');
-    const workerDesc = document.getElementById('workerDesc');
-    const workerAvatar = document.getElementById('workerAvatar');
-    const skillsCount = document.getElementById('skillsCount');
-    const skillsList = document.getElementById('skillsList');
-    const priceBase = document.getElementById('priceBase');
-    const priceExtra = document.getElementById('priceExtra');
-    const priceTotal = document.getElementById('priceTotal');
-    const btnOnboard = document.getElementById('btnOnboard');
+    document.getElementById('btnTalkSales').onclick = () => openModal('salesModal');
+    document.getElementById('btnOnboard').onclick = () => openModal('signupModal');
 
-    // ----- Render -----
-    workerName.textContent = selWorker?.name || 'Worker';
-    workerDesc.textContent = 'You can always adjust Skills later.';
-    workerAvatar.src = getLS('engini.workerAvatar', uiAvatar(selWorker?.name));
-    workerAvatar.onerror = () => { workerAvatar.src = uiAvatar(selWorker?.name); };
+    document.getElementById('workerName').textContent = selWorker?.name || 'Worker';
+    document.getElementById('workerDesc').textContent = 'You can always adjust Skills later.';
+    const avatarUrl = getLS('engini.workerAvatar', uiAvatar(selWorker?.name));
+    const avatarEl = document.getElementById('workerAvatar');
+    avatarEl.src = avatarUrl;
+    avatarEl.onerror = () => { avatarEl.src = uiAvatar(selWorker?.name); };
 
-    skillsCount.textContent = selectedSkills.length;
-    skillsList.innerHTML = `
+    document.getElementById('skillsCount').textContent = selectedSkills.length;
+    document.getElementById('skillsList').innerHTML = `
       <ul class="list">
         ${selectedSkills.map(s => `<li>${s}</li>`).join('')}
       </ul>
     `;
 
-    priceBase.textContent = `$${(pricing.base ?? 2000).toLocaleString()}`;
-    priceExtra.textContent = `$${(pricing.extra ?? 0).toLocaleString()}`;
-    priceTotal.textContent = `$${(pricing.total ?? 2000).toLocaleString()}`;
+    document.getElementById('priceBase').textContent = `$${(pricing.base ?? 2000).toLocaleString()}`;
+    document.getElementById('priceExtra').textContent = `$${(pricing.extra ?? 0).toLocaleString()}`;
+    document.getElementById('priceTotal').textContent = `$${(pricing.total ?? 2000).toLocaleString()}`;
 
-    // ----- Onboard flow -----
-    btnOnboard.addEventListener('click', ()=> openModal('signupModal'));
-
-    function submitSignup(){
+    function submitSignup() {
       const name = document.getElementById('fName').value.trim();
       const email = document.getElementById('fEmail').value.trim();
       const company = document.getElementById('fCompany').value.trim();
       const role = document.getElementById('fRole').value.trim();
       const pass = document.getElementById('fPass').value;
-
       const errorEl = document.getElementById('signupError');
 
-      if(!name || !email || !company || !role || !pass || pass.length < 6){
+      if (!name || !email || !company || !role || !pass || pass.length < 6) {
         errorEl.style.display = 'block';
         return;
       }
+
       errorEl.style.display = 'none';
-
-      setLS(LS.SIGNUP, {name,email,company,role,ts:Date.now()});
-      // In a real app, call your backend; here we simulate success.
-      closeModal('signupModal');
-      // route to chat workspace
-      window.location.href = 'chat.html';
-    }
-
-    function mockSSO(){
-      // Minimal mock SSO success path
-      setLS(LS.SIGNUP, {sso:true, email:'sso@example.com', ts:Date.now()});
+      setLS(LS.SIGNUP, { name, email, company, role, ts: Date.now() });
       closeModal('signupModal');
       window.location.href = 'chat.html';
     }
 
-    // expose globally
+    function mockSSO() {
+      setLS(LS.SIGNUP, { sso: true, email: 'sso@example.com', ts: Date.now() });
+      closeModal('signupModal');
+      window.location.href = 'chat.html';
+    }
+
     window.submitSignup = submitSignup;
     window.mockSSO = mockSSO;
   </script>
