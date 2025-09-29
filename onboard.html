@@ -5,102 +5,29 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Engini - Review & Activate Worker</title>
   <link rel="icon" type="image/png" href="image.png"/>
-  <style>
-    :root{
-      --bg:#f7f9fc;
-      --card:#ffffff;
-      --ink:#0b1220;
-      --muted:#64748b;
-      --line:#e6eaf0;
-      --primary:#1677ff;
-      --primary-ink:#fff;
-      --success:#0bb07b;
-      --ring:rgba(22,119,255,.15);
-      --chip:#f1f4fb;
-      --shadow:0 8px 24px rgba(9,30,66,.08);
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font:14px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
-      color:var(--ink);
-      background:
-        radial-gradient(#e9edf5 1px, transparent 1px) 0 0 / 18px 18px,
-        var(--bg);
-    }
-    .container{max-width:1120px;margin:0 auto;padding:0 20px}
-
-    /* Header */
-    .header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.72);backdrop-filter:saturate(1.1) blur(8px);border-bottom:1px solid var(--line)}
-    .header-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px}
-    .brand img{height:26px;width:auto}
-    .progress{display:flex;align-items:center;gap:8px;color:var(--muted);font-weight:600}
-    .progress .dot{display:inline-block;width:20px;height:20px;border:2px solid var(--line);border-radius:999px;background:#fff;vertical-align:-4px}
-    .progress .active .dot{background:var(--primary);border-color:var(--primary)}
-    .cta-sales{height:36px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:600}
-    .cta-sales:hover{box-shadow:var(--shadow)}
-
-    /* Page head */
-    .h1{font-size:28px;line-height:1.2;margin:24px 0 8px;text-align:center}
-    .lead{max-width:760px;margin:0 auto;text-align:center;color:var(--muted)}
-
-    /* Cards / layout */
-    .layout{display:grid;grid-template-columns:1fr 320px;gap:18px;margin-top:16px}
-    @media (max-width:980px){.layout{grid-template-columns:1fr}}
-    .panel{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:12px;
-      box-shadow:0 4px 14px rgba(9,30,66,.05);
-    }
-    .panel .inner{padding:16px}
-
-    .worker-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
-    .avatar{width:48px;height:48px;border-radius:999px;border:2px solid var(--line);object-fit:cover;background:#fff}
-    .muted{color:var(--muted)}
-    .row-between{display:flex;align-items:center;justify-content:space-between;gap:12px}
-
-    .chips{display:flex;flex-wrap:wrap;gap:8px}
-    .chip{display:inline-flex;align-items:center;padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:var(--chip);font-weight:600}
-    .list{margin:0;padding-left:18px}
-    .list li{margin:4px 0}
-    .scrollbox{max-height:320px;overflow:auto;border:1px dashed var(--line);border-radius:10px;padding:12px;background:#fff}
-
-    .btn{height:38px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:#fff;font-weight:700;cursor:pointer}
-    .btn:hover{box-shadow:var(--shadow)}
-    .btn.primary{background:var(--primary);color:var(--primary-ink);border-color:var(--primary)}
-    .btn:disabled{opacity:.6;cursor:not-allowed}
-    .link{color:var(--primary);font-weight:700;text-decoration:none}
-
-    /* Summary */
-    .summary{position:sticky;top:84px}
-    .summary .row{display:flex;align-items:center;justify-content:space-between;margin:8px 0}
-    .label{color:var(--muted)}
-    .value{font-weight:800}
-    .total{font-size:18px}
-
-    /* Modals */
-    .modal-backdrop{position:fixed;inset:0;background:rgba(9,22,36,.45);display:none;align-items:center;justify-content:center;z-index:120}
-    .modal-backdrop.show{display:flex}
-    .modal{
-      width:min(720px,94vw);background:#fff;border:1px solid var(--line);
-      border-radius:12px;box-shadow:0 24px 60px rgba(0,0,0,.25);overflow:hidden
-    }
-    .modal header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line)}
-    .modal .h3{font-weight:800}
-    .modal .scroll{max-height:62vh;overflow:auto;padding:14px}
-    .modal .close{background:transparent;border:0;font-size:20px;cursor:pointer}
-
-    .row{display:flex;gap:10px}
-    .field{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px}
-    .ok{background:var(--primary);color:#fff;border:1px solid var(--primary);height:38px;border-radius:10px;padding:0 14px;font-weight:700}
-    .sso{background:#111827;color:#fff;border:1px solid #111827;height:38px;border-radius:10px;padding:0 14px;font-weight:700}
-
-    .foot-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
-  </style>
+<link rel="stylesheet" href="style.css">
 </head>
+<style>
+  .list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.list li {
+  background-color: var(--chip, #f1f5ff);
+  color: var(--chip-ink, #1f2937);
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 9999px;
+  padding: 6px 12px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+</style>
 <body>
   <!-- Header -->
   <header class="header">
@@ -108,15 +35,15 @@
       <div class="brand">
         <img src="logo.png" alt="Engini logo">
       </div>
-      <div class="progress">
-        <span><span class="dot"></span> Select Worker</span>
-        <span>›</span>
-        <span><span class="dot"></span> Select Skills</span>
-        <span>›</span>
-        <span class="active"><span class="dot"></span> Onboard</span>
-        <span>›</span>
-        <span><span class="dot"></span> Chat Workspace</span>
-      </div>
+     <div class="progress" aria-label="progress">
+<span data-step="1"><span class="dot"></span> Select Worker</span>
+<span>›</span>
+<span data-step="2"><span class="dot"></span> Select Skills</span>
+<span>›</span>
+<span data-step="3" class="active"><span class="dot"></span> Onboard</span>
+<span>›</span>
+<span data-step="4"><span class="dot"></span> Chat Workspace</span>
+</div>
       <button class="cta-sales" id="btnTalkSales">Talk to Sales</button>
     </div>
   </header>
@@ -149,7 +76,7 @@
           </div>
 
           <div class="foot-actions">
-            <a class="link" href="skills.html">← Back to Skills</a>
+            <a class="link" href="skills.html">Back to Skills</a>
             <button id="btnOnboard" class="btn primary">Onboard Worker</button>
           </div>
         </div>
@@ -242,7 +169,37 @@
       PRICING:'engini.pricing',
       SIGNUP:'engini.signup'
     };
+const STEP_URLS = { 1:'index.html', 2:'skills.html', 3:'onboard.html', 4:'chat.html' };
 
+
+function setActiveProgressByPath(){
+const path = (location.pathname || '').toLowerCase();
+let step = 1;
+if (path.includes('skills')) step = 2;
+else if (path.includes('onboard')) step = 3;
+else if (path.includes('chat')) step = 4;
+document.querySelectorAll('.progress [data-step]').forEach(el=>{
+el.classList.remove('active');
+if(Number(el.dataset.step) === step) el.classList.add('active');
+});
+}
+
+
+function wireProgressNav(){
+document.querySelectorAll('.progress [data-step]').forEach(el=>{
+el.addEventListener('click', ()=>{
+const step = Number(el.dataset.step);
+const url = STEP_URLS[step] || 'index.html';
+window.location.href = url;
+});
+});
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+setActiveProgressByPath();
+wireProgressNav();
+});
     function getLS(key, fallback=null){ try{ return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }catch{ return fallback; } }
     function setLS(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
 

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Engini - Select Skills</title>
   <link rel="icon" type="image/png" href="image.png"/>
-
+<link rel="stylesheet" href="style.css">
   <style>
     /* =========================
        Light Glassmorphism Theme
@@ -48,25 +48,6 @@
     }
     .container{max-width:1120px;margin:0 auto;padding:0 20px}
 
-    /* Header (same as index) */
-    .header{
-      position:sticky;top:0;z-index:50;
-      background:var(--glass);backdrop-filter:saturate(1.2) blur(8px);
-      border-bottom:1px solid var(--line);
-    }
-    .header-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px}
-    .brand img{height:26px;width:auto}
-    .progress{display:flex;align-items:center;gap:8px;color:var(--muted);font-weight:600}
-    .progress .dot{display:inline-block;width:18px;height:18px;border:2px solid var(--line);border-radius:999px;vertical-align:-4px;background:#fff}
-    .progress .active .dot{background:var(--primary);border-color:var(--primary)}
-    .progress span{display:flex;align-items:center;gap:6px}
-    .cta-sales{height:36px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;font-weight:700}
-    .cta-sales:hover{box-shadow:var(--shadow-sm);border-color:var(--line-strong)}
-
-    .h1{font-size:30px;line-height:1.2;margin:22px 0 4px;text-align:center}
-    .muted{color:var(--muted)}
-    .lead{max-width:720px;margin:0 auto 8px;text-align:center}
 
     /* Grid: left content + right pricing */
     .grid-two{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin:18px 0}
@@ -90,7 +71,14 @@
     .title{font-size:22px;font-weight:800}
     .subtitle{font-size:12px;color:var(--muted)}
     .count{font-weight:800}
-
+    .back{
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      height:38px;padding:0 14px;border-radius:10px;
+      border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:700;cursor:pointer 
+    
+    }
     .btn{
       height:38px;padding:0 14px;border-radius:10px;
       border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:700;cursor:pointer
@@ -212,25 +200,35 @@
     }
     .pill.included { background: #e8faef; border: none; color: #0f5132; padding: 2px 6px; border-radius: 999px; }
     .pill.extra { background: #fff; border: 1px solid var(--line); color: #374151; padding: 2px 6px; border-radius: 999px; }
-  </style>
+
+
+.progress [data-step]{cursor:pointer}
+.progress [data-step]:hover{color:#334155}
+.progress .active .dot{background:var(--primary);border-color:var(--primary)}
+
+
+
+</style>
+<link rel="stylesheet" href="style.css">
+
 </head>
 <body>
   <header class="header">
     <div class="header-inner container">
       <div class="brand">
         <img src="logo.png" alt="Engini logo">
-      </div>
-      <div class="progress" aria-label="progress">
-        <span><span class="dot"></span> Select Worker</span>
-        <span>›</span>
-        <span class="active"><span class="dot"></span> Select Skills</span>
-        <span>›</span>
-        <span><span class="dot"></span> Onboard</span>
-        <span>›</span>
-        <span><span class="dot"></span> Chat Workspace</span>
-      </div>
-      <button class="cta-sales" id="btnTalkSales">Talk to Sales</button>
-    </div>
+</div>
+<div class="progress" aria-label="progress">
+<span data-step="1"><span class="dot"></span> Select Worker</span>
+<span>›</span>
+<span data-step="2" class="active"><span class="dot"></span> Select Skills</span>
+<span>›</span>
+<span data-step="3"><span class="dot"></span> Onboard</span>
+<span>›</span>
+<span data-step="4"><span class="dot"></span> Chat Workspace</span>
+</div>
+<button class="cta-sales" id="btnTalkSales">Talk to Sales</button>
+</div>
   </header>
 
   <main class="container">
@@ -238,17 +236,16 @@
       <img id="workerAvatar" src="" alt="Worker">
       <div class="titleblock">
         <h1 class="h1" style="margin:0;text-align:left">Select up to 10 Skills</h1>
-        <div id="workerDesc" class="muted">First 5 included – each extra adds $250.</div>
+        <div id="workerDesc" class="muted"></div>
       </div>
     </section>
-    <p class="lead muted">The first <b>5</b> skills are included in the base price of <b>$2,000</b>. Each additional skill adds <b>$250</b>.</p>
 
     <div class="page-center">
       <div class="glass-card" style="max-width: 90%; width: 100%;">
         <div class="head-row">
           <div class="titleblock">
             <div id="workerName" class="title">Worker</div>
-            <div class="subtitle">Choose up to 10 skills – first 5 are included.</div>
+     
           </div>
           <div class="count">Selected: <span id="countSel">0</span> / 10</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -263,7 +260,7 @@
 
         <div class="wc-divider" style="margin-top:12px"></div>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px">
-          <a href="index.html" class="btn">Back to Workers</a>
+          <a href="index.html" class="back">Back to Workers</a>
           <button id="btnContinue" class="btn primary">Continue</button>
         </div>
       </div>
@@ -320,7 +317,34 @@
       SKILLS:'engini.selectedSkills',
       PRICING:'engini.pricing'
     };
+const STEP_URLS = { 1:'index.html', 2:'skills.html', 3:'onboard.html', 4:'chat.html' };
+function setActiveProgressByPath(){
+const path = (location.pathname || '').toLowerCase();
+let step = 1;
+if (path.includes('skills')) step = 2;
+else if (path.includes('onboard')) step = 3;
+else if (path.includes('workspace')) step = 4;
+document.querySelectorAll('.progress [data-step]').forEach(el=>{
+el.classList.toggle('active', Number(el.dataset.step) === step);
+});
+}
 
+
+function wireProgressNav(){
+document.querySelectorAll('.progress [data-step]').forEach(el=>{
+el.addEventListener('click', ()=>{
+const step = Number(el.dataset.step);
+const url = STEP_URLS[step] || 'index.html';
+window.location.href = url;
+});
+});
+}
+
+
+(function init(){
+setActiveProgressByPath();
+wireProgressNav();
+})();
     // ------- Worker & Skills data -------
     const WORKER_SKILLS = {
       procurement: [
@@ -435,7 +459,7 @@
 
     // ------- Header info -------
     workerName.textContent = selWorker?.name || 'Worker';
-    workerDesc.textContent = 'Choose up to 10 skills – first 5 are included.';
+   
     workerAvatar.src = getLS('engini.workerAvatar', uiAvatar(selWorker?.name));
     workerAvatar.onerror = () => { workerAvatar.src = uiAvatar(selWorker?.name); };
 

@@ -108,6 +108,7 @@ const WORKERS = [
   },
   {
     id:'custom',
+    avatar:'custom.png',
     name:'Custom',
     title:'Build your dream worker',
     desc:'Create a custom AI worker tailored to your stack.',
