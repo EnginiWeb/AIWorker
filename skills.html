@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
   <meta charset="utf-8"/>
@@ -76,6 +76,13 @@
       background:var(--glass-strong);backdrop-filter: blur(6px);
       border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);
       padding:14px;
+    }
+    .page-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
     }
 
     .head-row{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap}
@@ -159,58 +166,55 @@
     input,textarea{font:inherit;color:var(--ink)}
     .field{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff}
 
-
     /* Two-column skill list */
-.list-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px 12px;
-}
-@media (max-width: 760px) {
-  .list-grid { grid-template-columns: 1fr; }
-}
+    .list-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px 12px;
+    }
+    @media (max-width: 760px) {
+      .list-grid { grid-template-columns: 1fr; }
+    }
 
-.skill-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: #fff;
-  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
-  cursor: pointer;
-}
-.skill-row:hover { border-color: var(--line-strong); }
-.skill-row.is-selected {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px var(--ring) inset;
-  background: #f5faff;
-}
+    .skill-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+      cursor: pointer;
+    }
+    .skill-row:hover { border-color: var(--line-strong); }
+    .skill-row.is-selected {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--ring) inset;
+      background: #f5faff;
+    }
 
-.skill-left { display: flex; align-items: center; gap: 10px; flex: 1; }
-.check {
-  width: 16px; height: 16px; border-radius: 5px;
-  border: 2px solid var(--primary);
-  display: grid; place-items: center;
-  background: #fff; color: #fff; flex-shrink: 0;
-}
-.check svg { display: none; }
-.skill-row.is-selected .check { background: var(--primary); color: #fff; }
-.skill-row.is-selected .check svg { display: block; }
+    .skill-left { display: flex; align-items: center; gap: 10px; flex: 1; }
+    .check {
+      width: 16px; height: 16px; border-radius: 5px;
+      border: 2px solid var(--primary);
+      display: grid; place-items: center;
+      background: #fff; color: #fff; flex-shrink: 0;
+    }
+    .check svg { display: none; }
+    .skill-row.is-selected .check { background: var(--primary); color: #fff; }
+    .skill-row.is-selected .check svg { display: block; }
 
-.skill-title { font-weight: 600; font-size: 14px; }
-.skill-meta {
-  display: flex; align-items: center; gap: 6px; margin-top: 2px;
-  font-size: 12px; color: var(--muted);
-}
-.pill.included { background: #e8faef; border: none; color: #0f5132; padding: 2px 6px; border-radius: 999px; }
-.pill.extra { background: #fff; border: 1px solid var(--line); color: #374151; padding: 2px 6px; border-radius: 999px; }
-
+    .skill-title { font-weight: 600; font-size: 14px; }
+    .skill-meta {
+      display: flex; align-items: center; gap: 6px; margin-top: 2px;
+      font-size: 12px; color: var(--muted);
+    }
+    .pill.included { background: #e8faef; border: none; color: #0f5132; padding: 2px 6px; border-radius: 999px; }
+    .pill.extra { background: #fff; border: 1px solid var(--line); color: #374151; padding: 2px 6px; border-radius: 999px; }
   </style>
 </head>
 <body>
-  <!-- Header -->
   <header class="header">
     <div class="header-inner container">
       <div class="brand">
@@ -230,7 +234,6 @@
   </header>
 
   <main class="container">
-    <!-- Hero -->
     <section class="hero">
       <img id="workerAvatar" src="" alt="Worker">
       <div class="titleblock">
@@ -240,10 +243,8 @@
     </section>
     <p class="lead muted">The first <b>5</b> skills are included in the base price of <b>$2,000</b>. Each additional skill adds <b>$250</b>.</p>
 
-    <!-- Content grid -->
-    <section class="grid-two">
-      <!-- Left: Skills -->
-      <div class="glass-card">
+    <div class="page-center">
+      <div class="glass-card" style="max-width: 90%; width: 100%;">
         <div class="head-row">
           <div class="titleblock">
             <div id="workerName" class="title">Worker</div>
@@ -258,7 +259,6 @@
 
         <div class="wc-divider"></div>
 
-        <!-- Two-column skills container -->
         <div id="chips" class="list-grid" aria-live="polite"></div>
 
         <div class="wc-divider" style="margin-top:12px"></div>
@@ -267,10 +267,10 @@
           <button id="btnContinue" class="btn primary">Continue</button>
         </div>
       </div>
+    </div>
+  </main>
 
 
-
-  <!-- Talk to Sales Modal -->
   <div id="salesModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="salesTitle">
     <div class="modal" onclick="event.stopPropagation()">
       <header>
@@ -293,7 +293,6 @@
     </div>
   </div>
 
-  <!-- Custom Skill Modal -->
   <div id="customModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="customTitle">
     <div class="modal" onclick="event.stopPropagation()">
       <header>
@@ -454,29 +453,30 @@
     }else{
       selectedSkills = selectedSkills.filter(s => allSkills.includes(s) || s.endsWith('(Custom)'));
     }
-function skillRowTemplate(label, index, isSelected) {
-  const included = (index + 1) <= BASE_INCLUDED;
-  return `
-    <div class="skill-row ${isSelected ? 'is-selected' : ''}" data-skill="${encodeURIComponent(label)}">
-      <div class="skill-left">
-        <div class="check" role="checkbox" aria-checked="${isSelected}">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 6 9 17l-5-5"></path>
-          </svg>
-        </div>
-        <div>
-          <div class="skill-title">${label}</div>
-          <div class="skill-meta">
-            <span class="pill ${included ? 'included' : 'extra'}"></span>
+    function skillRowTemplate(label, index, isSelected) {
+      const included = (index + 1) <= BASE_INCLUDED;
+      const pillLabel = included ? 'Included' : `Extra (+${EXTRA_PRICE})`;
+      const pillClass = included ? 'included' : 'extra';
+      
+      return `
+        <div class="skill-row ${isSelected ? 'is-selected' : ''}" data-skill="${encodeURIComponent(label)}">
+          <div class="skill-left">
+            <div class="check" role="checkbox" aria-checked="${isSelected}">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 6 9 17l-5-5"></path>
+              </svg>
+            </div>
+            <div>
+              <div class="skill-title">${label}</div>
+              <div class="skill-meta">
+                <span class="pill ${pillClass}">${pillLabel}</span>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </div>`;
-}
-
+        </div>`;
+    }
 
     function renderSkills(){
-      // Create a document fragment for performance
       const frag = document.createDocumentFragment();
       allSkills.forEach((s, i)=>{
         const wrapper = document.createElement('div');
@@ -488,7 +488,7 @@ function skillRowTemplate(label, index, isSelected) {
 
       chipsEl.querySelectorAll('.skill-row').forEach(row=>{
         const label = decodeURIComponent(row.getAttribute('data-skill'));
-        const box   = row.querySelector('.check');
+        const box = row.querySelector('.check');
         const toggle = ()=>{
           const isSelected = selectedSkills.includes(label);
           if(isSelected){
@@ -497,7 +497,7 @@ function skillRowTemplate(label, index, isSelected) {
             if(selectedSkills.length >= MAX_SELECT) return;
             selectedSkills.push(label);
           }
-          setLS(LS.SKILLS, selectedSkills); // persist
+          setLS(LS.SKILLS, selectedSkills);
           renderSkills();
         };
         row.addEventListener('click', (e)=>{ if(e.target.closest('.check') || e.target.closest('.skill-left')) toggle(); });
@@ -510,15 +510,10 @@ function skillRowTemplate(label, index, isSelected) {
     function updatePricing(){
       const count = selectedSkills.length;
       countSel.textContent = count;
-      selInfoCount.textContent = count;
 
       const extraCount = Math.max(0, count - BASE_INCLUDED);
       const extra = extraCount * EXTRA_PRICE;
       const total = BASE_PRICE + extra;
-
-      priceBase.textContent = `$${BASE_PRICE.toLocaleString()}`;
-      priceExtra.textContent = `$${extra.toLocaleString()}`;
-      priceTotal.textContent = `$${total.toLocaleString()}`;
 
       setLS(LS.PRICING, {base:BASE_PRICE, extra, total, count});
     }
