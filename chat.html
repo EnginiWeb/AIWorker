@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Engini - Chat Workspace</title>
+  <link rel="icon" type="image/png" href="image.png"/>
+  <style>
+    :root{
+      --bg:#f7f9fc;
+      --card:#ffffff;
+      --ink:#0b1220;
+      --muted:#64748b;
+      --line:#e6eaf0;
+      --primary:#1677ff;
+      --primary-ink:#fff;
+      --success:#0bb07b;
+      --warning:#f59e0b;
+      --ring:rgba(22,119,255,.16);
+      --chip:#eef3ff;
+      --shadow:0 8px 24px rgba(9,30,66,.08);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font:14px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      color:var(--ink);
+      background:
+        radial-gradient(#e9edf5 1px, transparent 1px) 0 0 / 18px 18px,
+        var(--bg);
+    }
+    .container{max-width:1280px;margin:0 auto;padding:0 18px}
+
+    /* Header */
+    .header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.75);backdrop-filter:saturate(1.1) blur(8px);border-bottom:1px solid var(--line)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
+    .brand img{height:26px}
+    .progress{display:flex;align-items:center;gap:8px;color:var(--muted);font-weight:700}
+    .progress .dot{display:inline-block;width:20px;height:20px;border:2px solid var(--line);border-radius:999px;background:#fff;vertical-align:-4px}
+    .progress .active .dot{background:var(--primary);border-color:var(--primary)}
+    .hstack{display:flex;align-items:center;gap:8px}
+    .btn{height:34px;padding:0 12px;border-radius:10px;border:1px solid var(--line);background:#fff;font-weight:700;cursor:pointer}
+    .btn:hover{box-shadow:var(--shadow)}
+    .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+    .btn.ghost{background:transparent}
+    .input{height:34px;padding:0 10px;border-radius:10px;border:1px solid var(--line);background:#fff}
+    .muted{color:var(--muted)}
+
+    /* Layout */
+    .workspace{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;margin:16px auto}
+    @media (max-width:1100px){.workspace{grid-template-columns:1fr}}
+    .panel{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 4px 14px rgba(9,30,66,.05)}
+    .panel .inner{padding:14px}
+
+    /* Chat column */
+    .chat-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+    .title{font-weight:800}
+    .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{display:inline-flex;align-items:center;gap:6px;background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:6px 10px;font-weight:700;color:#18315a;cursor:pointer}
+    .chip:hover{box-shadow:var(--shadow)}
+    .chat-scroll{height:58vh;min-height:360px;overflow:auto;padding:14px;scroll-behavior:smooth}
+    .msg{display:flex;gap:10px;margin:10px 0}
+    .bubble{max-width:72ch;padding:10px 12px;border-radius:12px;border:1px solid var(--line)}
+    .from-user .bubble{background:#e9f1ff;border-color:#d9e7ff}
+    .from-ai .bubble{background:#fff}
+    .avatar-sm{width:28px;height:28px;border-radius:999px;border:1px solid var(--line);object-fit:cover}
+    .meta{font-size:12px;color:var(--muted);margin-bottom:4px}
+
+    .compose{display:flex;align-items:center;gap:8px;padding:10px;border-top:1px solid var(--line)}
+    .textrow{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px 8px;flex:1}
+    .textarea{flex:1;min-height:42px;max-height:120px;padding:6px 8px;border:0;outline:0;resize:vertical}
+    .toolbtn{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer}
+    .toolbtn:hover{box-shadow:var(--shadow)}
+    .send{height:38px;padding:0 16px;border-radius:10px;border:1px solid var(--line);background:var(--primary);color:#fff;font-weight:800}
+
+    .dropzone{position:absolute;inset:0;background:rgba(22,119,255,.06);border:2px dashed var(--primary);display:none;place-items:center;font-weight:800;color:#17408b;z-index:20}
+
+    /* Right panel */
+    .right-head{display:flex;align-items:center;gap:10px;padding:14px;border-bottom:1px solid var(--line)}
+    .avatar-lg{width:64px;height:64px;border-radius:999px;border:2px solid var(--line);object-fit:cover}
+    .dot{display:inline-block;width:10px;height:10px;border-radius:999px;background:var(--success);box-shadow:0 0 0 4px rgba(11,176,123,.15)}
+    .section-title{font-weight:800;margin:8px 0}
+    .badges{display:flex;flex-wrap:wrap;gap:6px}
+    .badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:4px 8px;background:#fafcff;font-weight:700}
+    .list{margin:0;padding-left:18px}
+    .list li{margin:4px 0}
+
+    /* Drawer (Connectors) */
+    .backdrop{position:fixed;inset:0;background:rgba(9,22,36,.45);display:none;z-index:120}
+    .backdrop.show{display:block}
+    .drawer{position:fixed;top:0;right:-460px;width:440px;height:100%;background:#fff;border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(9,30,66,.15);transition:right .25s ease;z-index:130;display:flex;flex-direction:column}
+    .drawer.show{right:0}
+    .drawer header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line)}
+    .drawer main{padding:12px 14px;overflow:auto}
+    .tabs{display:flex;gap:6px;flex-wrap:wrap}
+    .tab{height:30px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:#fff;cursor:pointer}
+    .tab.active{background:var(--primary);border-color:var(--primary);color:#fff}
+    .field{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px}
+    .row{display:flex;gap:8px}
+    .row-between{display:flex;align-items:center;justify-content:space-between}
+    .help{font-size:12px;color:var(--muted)}
+    .hr{border:none;border-top:1px solid var(--line);margin:12px 0}
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner container">
+      <div class="brand">
+        <img src="logo.png" alt="Engini logo">
+      </div>
+      <div class="progress">
+        <span><span class="dot"></span> Select Worker</span><span>›</span>
+        <span><span class="dot"></span> Select Skills</span><span>›</span>
+        <span><span class="dot"></span> Onboard</span><span>›</span>
+        <span class="active"><span class="dot"></span> Chat Workspace</span>
+      </div>
+      <div class="hstack">
+        <input id="geminiKey" class="input" type="password" placeholder="Gemini API Key (optional)"/>
+        <button class="btn" id="saveKey">Save</button>
+        <button class="btn" id="talkSales">Talk to Sales</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Workspace -->
+  <div class="container workspace">
+    <!-- LEFT: Chat -->
+    <section class="panel" id="chatPanel">
+      <div class="chat-head">
+        <div>
+          <div class="title" id="chatTitle">Chat with Worker</div>
+          <div class="muted" id="chatSubtitle">Demo Mode — connect systems to go live</div>
+        </div>
+        <div class="hstack">
+          <button id="btnConnect" class="btn">Connect systems</button>
+          <button id="btnClear" class="btn ghost">Clear</button>
+        </div>
+      </div>
+
+      <div class="inner">
+        <div id="starter" class="chips" style="margin-bottom:8px"></div>
+      </div>
+
+      <div id="dropzone" class="dropzone">Drop files to upload</div>
+
+      <div id="chatScroll" class="chat-scroll"></div>
+
+      <div class="compose">
+        <div class="textrow">
+          <button id="btnAttach" class="toolbtn" title="Attach file">📎</button>
+          <input id="fileInput" type="file" hidden multiple/>
+          <textarea id="input" class="textarea" placeholder="Type a message to your worker…"></textarea>
+          <button id="btnMic" class="toolbtn" title="Voice input">🎤</button>
+        </div>
+        <button id="btnSend" class="send">Send</button>
+      </div>
+    </section>
+
+    <!-- RIGHT: Avatar panel -->
+    <aside class="panel">
+      <div class="right-head">
+        <img id="avatar" class="avatar-lg" src="" alt="avatar"/>
+        <div>
+          <div style="font-weight:800" id="workerName">AI Worker</div>
+          <div class="muted"><span class="dot"></span> Available</div>
+        </div>
+      </div>
+      <div class="inner">
+        <div class="section-title">Selected Skills</div>
+        <div class="badges" id="skillsBadges" style="margin-bottom:6px"></div>
+        <div class="scroll" style="max-height:180px;overflow:auto">
+          <ul id="skillsList" class="list"></ul>
+        </div>
+
+        <hr class="hr">
+        <div class="section-title">Connections</div>
+        <div class="badges" id="connBadges"></div>
+        <div class="help">Use “Connect systems” to add ERP/CRM/HRIS/ITSM/DB/Files. Saved in browser for demo.</div>
+
+        <hr class="hr">
+        <a class="btn" href="skills.html" style="width:100%">Manage Skills</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Connectors Drawer -->
+  <div id="drawerBackdrop" class="backdrop"></div>
+  <aside id="drawer" class="drawer" aria-label="Connect systems">
+    <header>
+      <div style="font-weight:800">Connect systems</div>
+      <button class="btn" onclick="closeDrawer()">Close</button>
+    </header>
+    <main>
+      <div class="tabs" id="tabs"></div>
+      <hr class="hr">
+      <div id="tabBody"></div>
+    </main>
+  </aside>
+
+  <script>
+    /* ========= Local Storage & Helpers ========= */
+    const LS = {
+      WORKER:'engini.selectedWorker',
+      SKILLS:'engini.selectedSkills',
+      PRICING:'engini.pricing',
+      SIGNUP:'engini.signup',
+      GEMINI:'engini.geminiKey',
+      CONN:'engini.connections', // {category: [{name,connected,last}]}
+      CHAT_PREFIX:'engini.chat.' // per worker id
+    };
+    const getLS=(k,f=null)=>{try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(f));}catch{return f;}};
+    const setLS=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+    const uiAvatar=(name)=>`https://ui-avatars.com/api/?name=${encodeURIComponent(name||'AI')}&background=E6EEF8&color=1B2A4A&size=128&bold=true`;
+
+    const selWorker = getLS(LS.WORKER, {id:'custom', name:'AI Worker'});
+    const selSkills = getLS(LS.SKILLS, []);
+    const chatKey = LS.CHAT_PREFIX + (selWorker?.id || 'default');
+    let chat = getLS(chatKey, []); // [{role:'user'|'assistant'|'system', content, ts}]
+    let connections = getLS(LS.CONN, {ERP:[],CRM:[],HRIS:[],ITSM:[],DB:[],Files:[]});
+    let geminiKey = getLS(LS.GEMINI, '');
+
+    /* ========= Header UI ========= */
+    document.getElementById('geminiKey').value = geminiKey || '';
+    document.getElementById('saveKey').onclick = ()=>{
+      geminiKey = document.getElementById('geminiKey').value.trim();
+      setLS(LS.GEMINI, geminiKey);
+      updateSubtitle();
+      alert(geminiKey ? 'Gemini key saved. Responses will use Gemini.' : 'Key cleared. Demo mode enabled.');
+    };
+    document.getElementById('talkSales').onclick = ()=>alert('A sales rep will reach out. (Demo)');
+
+    /* ========= Right Panel ========= */
+    document.getElementById('workerName').textContent = selWorker?.name || 'AI Worker';
+    const avatar = document.getElementById('avatar');
+    avatar.src = getLS('engini.workerAvatar', uiAvatar(selWorker?.name));
+    avatar.onerror = ()=>{ avatar.src = uiAvatar(selWorker?.name); };
+
+    // Skills preview
+    const skillsBadges = document.getElementById('skillsBadges');
+    const skillsList = document.getElementById('skillsList');
+    skillsBadges.innerHTML = selSkills.slice(0,8).map(s=>`<span class="badge">${s}</span>`).join('');
+    skillsList.innerHTML = selSkills.map(s=>`<li>${s}</li>`).join('');
+
+    /* ========= Starter Prompts (per worker) ========= */
+    const STARTERS = {
+      Sarah:[
+        'Drop a PDF invoice and I’ll run OCR + PO matching.',
+        'Check for duplicate suppliers this week.',
+        'Create a payment proposal for the next run.',
+        'List today’s 3-way-match exceptions.'
+      ],
+      David:[
+        'Reconcile the attached bank statement CSV.',
+        'Post this month’s recurring journals.',
+        'Draft a trial balance.',
+        'Update 2-week cash-flow forecast.'
+      ],
+      Selina:[
+        'Simulate onboarding a new hire named Alex Carter.',
+        'Create an HRIS record from the attached file.',
+        'Provision Slack/Okta access for a new Marketing Manager.',
+        'Send compliance training reminders to R&D.'
+      ],
+      Max:[
+        'Forward me a Jira ticket for triage.',
+        'Perform a password reset for the user provided.',
+        'Deploy this software package to Mac devices.',
+        'Review last 24h uptime alerts.'
+      ],
+      Jacob:[
+        'Classify this sanctions alert and propose a decision rationale.',
+        'Run entity resolution on these overlapping names.',
+        'Summarize adverse media for ACME Ltd.',
+        'Draft an EDD narrative for the open case.'
+      ],
+      "Custom Worker":[
+        'Describe your workflow goal and data sources.',
+        'Which systems should I connect to first?',
+        'Share a sample file to start a quick demo.',
+        'Generate a checklist for onboarding this worker.'
+      ]
+    };
+    const workerKey = (selWorker?.name in STARTERS) ? selWorker.name : 'Custom Worker';
+    const starterDiv = document.getElementById('starter');
+    STARTERS[workerKey].forEach(t=>{
+      const c=document.createElement('button');
+      c.className='chip'; c.textContent=t;
+      c.onclick=()=> sendMessage(t);
+      starterDiv.appendChild(c);
+    });
+
+    /* ========= Chat UI ========= */
+    const chatTitle = document.getElementById('chatTitle');
+    const chatSubtitle = document.getElementById('chatSubtitle');
+    chatTitle.textContent = `Chat with ${selWorker?.name || 'AI Worker'}`;
+
+    function updateSubtitle(){
+      const anyConnected = Object.values(connections).some(arr => (arr||[]).some(x=>x.connected));
+      let mode = geminiKey ? 'Live (Gemini)' : 'Demo Mode';
+      chatSubtitle.textContent = anyConnected ? `${mode} — using connected systems` : `${mode} — connect systems to go live`;
+      renderConnBadges();
+    }
+    updateSubtitle();
+
+    const scrollEl = document.getElementById('chatScroll');
+    function renderChat(){
+      scrollEl.innerHTML = chat.map(m=>{
+        const mine = m.role==='user';
+        return `
+          <div class="msg ${mine?'from-user':'from-ai'}">
+            ${!mine?`<img class="avatar-sm" src="${avatar.src}" alt="ai"/>`:'<div style="width:28px"></div>'}
+            <div>
+              <div class="meta">${mine?'You':selWorker?.name||'AI'} • ${new Date(m.ts).toLocaleTimeString()}</div>
+              <div class="bubble">${escapeHtml(m.content).replace(/\n/g,'<br/>')}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      scrollEl.scrollTop = scrollEl.scrollHeight + 200;
+      setLS(chatKey, chat);
+    }
+    const escapeHtml = s=>s.replace(/[&<>"]/g,c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
+    renderChat();
+
+    /* ========= Compose area ========= */
+    const input = document.getElementById('input');
+    const btnSend = document.getElementById('btnSend');
+    btnSend.onclick = ()=> { if(input.value.trim()) sendMessage(input.value.trim()); };
+    input.addEventListener('keydown', e=>{
+      if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); btnSend.click(); }
+    });
+
+    // Attach + Drop
+    const fileInput = document.getElementById('fileInput');
+    document.getElementById('btnAttach').onclick = ()=> fileInput.click();
+    fileInput.onchange = (e)=>{
+      const files=[...e.target.files];
+      files.forEach(f=> addFileMessage(f));
+      fileInput.value='';
+    };
+
+    const dropzone = document.getElementById('dropzone');
+    const chatPanel = document.getElementById('chatPanel');
+    ['dragenter','dragover'].forEach(ev=>chatPanel.addEventListener(ev,e=>{
+      e.preventDefault(); dropzone.style.display='grid';
+    }));
+    ;['dragleave','drop'].forEach(ev=>chatPanel.addEventListener(ev, e=>{
+      e.preventDefault(); if(ev==='drop'){ [...e.dataTransfer.files].forEach(addFileMessage); }
+      dropzone.style.display='none';
+    }));
+
+    function addFileMessage(f){
+      const msg = `📎 Uploaded file: **${f.name}** (${Math.round(f.size/1024)} KB). I will process it in demo mode.`;
+      chat.push({role:'user', content: msg, ts:Date.now()});
+      renderChat();
+      reply(`Received "${f.name}". In demo, I parse metadata only. Provide guidance how to use with ${selWorker?.name}.`);
+    }
+
+    // Mic (Web Speech API)
+    let rec=null, listening=false;
+    document.getElementById('btnMic').onclick = ()=>{
+      if(!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)){ alert('Speech recognition not supported.'); return;}
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if(!rec){ rec = new SR(); rec.lang='en-US'; rec.interimResults=false; }
+      if(listening){ rec.stop(); listening=false; return;}
+      rec.onresult=(e)=>{ const t=e.results[0][0].transcript; input.value = (input.value?input.value+' ':'')+t; };
+      rec.onend=()=>listening=false;
+      rec.start(); listening=true;
+    };
+
+    // Clear
+    document.getElementById('btnClear').onclick = ()=>{
+      if(confirm('Clear this conversation?')){ chat=[]; renderChat(); }
+    };
+
+    /* ========= Send & Reply ========= */
+    async function sendMessage(text){
+      chat.push({role:'user', content:text, ts:Date.now()});
+      renderChat();
+      input.value='';
+      await reply(text);
+    }
+
+    function sysPrompt(){
+      const skills = selSkills.length? `Your selected skills: ${selSkills.join('; ')}.` : 'No skills were selected.';
+      return `You are ${selWorker?.name || 'an AI Worker'} inside Engini.
+Follow enterprise tone. Be concise and actionable.
+If user asks for system data and no connectors are active, say you are in Demo Mode and suggest connecting systems. 
+${skills}`;
+    }
+
+    async function reply(userText){
+      if(geminiKey){
+        try{
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${encodeURIComponent(geminiKey)}`,{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({
+              contents:[
+                {role:'user', parts:[{text: sysPrompt()}]},
+                ...chat.slice(-8).map(m=>({role:m.role==='user'?'user':'model',parts:[{text:m.content}]})),
+                {role:'user', parts:[{text:userText}]}
+              ]
+            })
+          });
+          if(!res.ok) throw new Error(await res.text());
+          const data = await res.json();
+          const text = data?.candidates?.[0]?.content?.parts?.map(p=>p.text).join('\n') || 'Okay.';
+          chat.push({role:'assistant', content:text, ts:Date.now()});
+          renderChat();
+          return;
+        }catch(err){
+          console.warn('Gemini error, using demo.', err);
+        }
+      }
+      // Demo fallback
+      const demo = demoAnswer(userText);
+      chat.push({role:'assistant', content:demo, ts:Date.now()});
+      renderChat();
+    }
+
+    function demoAnswer(q){
+      const name = selWorker?.name || 'AI Worker';
+      const anyConn = Object.values(connections).some(arr => (arr||[]).some(x=>x.connected));
+      const prefix = anyConn
+        ? `Live mode: I can operate on connected systems.\n`
+        : `Demo Mode: I’m not connected to your systems yet.\n`;
+      let next = `Next best actions:\n• Connect systems (top right) and grant minimal scopes.\n• Share a sample file to run a quick simulation.\n• Tell me the goal and timeframe.`;
+      if(name==='Sarah') next = `Next best actions:\n• Upload an invoice PDF to simulate OCR+PO match.\n• Connect NetSuite/SAP to push a payment proposal.\n• Ask for a 3-way-match exceptions report.`;
+      if(name==='David') next = `Next best actions:\n• Attach the bank CSV to reconcile.\n• Ask me to prepare recurring journals.\n• Generate a trial balance draft.`;
+      if(name==='Selina') next = `Next best actions:\n• Simulate onboarding for a new hire.\n• Connect HRIS (e.g., Workday) to create records.\n• Provision access through Okta.`;
+      if(name==='Max') next = `Next best actions:\n• Forward a Jira ticket for triage.\n• Request a password reset flow.\n• Deploy a software package to Mac devices.`;
+      if(name==='Jacob') next = `Next best actions:\n• Paste a sanctions alert to classify.\n• Run KYC/KYB checklist.\n• Generate an EDD narrative.`;
+      return `${prefix}**${name}** here.\nYou said: “${q}”.\nI’ll respond concisely and suggest the fastest path to value.\n\n${next}`;
+    }
+
+    /* ========= Connections Drawer ========= */
+    const drawer = document.getElementById('drawer');
+    const backdrop = document.getElementById('drawerBackdrop');
+    const btnConnect = document.getElementById('btnConnect');
+    btnConnect.onclick = openDrawer;
+    function openDrawer(){ drawer.classList.add('show'); backdrop.classList.add('show'); }
+    function closeDrawer(){ drawer.classList.remove('show'); backdrop.classList.remove('show'); }
+    window.closeDrawer = closeDrawer;
+    backdrop.onclick = closeDrawer;
+
+    const CATS = ['ERP','CRM','HRIS','ITSM','DB','Files'];
+    const tabs = document.getElementById('tabs');
+    const tabBody = document.getElementById('tabBody');
+    let activeTab = CATS[0];
+
+    function renderTabs(){
+      tabs.innerHTML = '';
+      CATS.forEach(cat=>{
+        const b=document.createElement('button');
+        b.className='tab'+(cat===activeTab?' active':'');
+        b.textContent=cat;
+        b.onclick=()=>{activeTab=cat; renderTabs(); renderTabBody();}
+        tabs.appendChild(b);
+      });
+    }
+
+    function renderTabBody(){
+      const arr = connections[activeTab] || [];
+      const helpText = {
+        ERP:'Examples: NetSuite, SAP B1, Oracle',
+        CRM:'Examples: Salesforce, HubSpot',
+        HRIS:'Examples: Workday, BambooHR, HiBob',
+        ITSM:'Examples: ServiceNow, Jira Service Mgmt',
+        DB:'Examples: PostgreSQL, Snowflake, BigQuery',
+        Files:'Examples: Google Drive, S3, SharePoint'
+      }[activeTab];
+
+      tabBody.innerHTML = `
+        <div class="help">${helpText}</div>
+        <div style="margin:6px 0"><b>Add new ${activeTab} connection</b></div>
+        <div class="row">
+          <input id="connName" class="field" placeholder="${activeTab} system name (e.g., NetSuite)"/>
+        </div>
+        <div class="row" style="margin-top:8px">
+          <input id="connKey" class="field" placeholder="OAuth / API Key (mock)"/>
+        </div>
+        <div class="row-between" style="margin-top:8px">
+          <span class="help">We store this locally only for demo.</span>
+          <button class="btn primary" onclick="testAndSave()">Test & Save</button>
+        </div>
+
+        <hr class="hr">
+        <div style="font-weight:800;margin-bottom:6px">Connected</div>
+        <div id="connList"></div>
+      `;
+      const list = tabBody.querySelector('#connList');
+      if(!arr.length){ list.innerHTML='<div class="help">None yet.</div>'; }
+      else{
+        list.innerHTML = arr.map((c,i)=>`
+          <div class="row-between" style="border:1px solid var(--line);border-radius:10px;padding:8px;margin-bottom:8px">
+            <div>
+              <div style="font-weight:800">${c.name}</div>
+              <div class="help">${c.connected?'Connected':'Not connected'} • ${c.last?('last: '+new Date(c.last).toLocaleString()):''}</div>
+            </div>
+            <div class="hstack">
+              <button class="btn" onclick="disconnect('${activeTab}',${i})">Disconnect</button>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function testAndSave(){
+      const name = (document.getElementById('connName').value||'').trim();
+      const key  = (document.getElementById('connKey').value||'').trim();
+      if(!name || !key){ alert('Provide system name and an API key (mock).'); return; }
+      const item = { name, connected:true, last:Date.now() };
+      connections[activeTab] = [...(connections[activeTab]||[]), item];
+      setLS(LS.CONN, connections);
+      renderTabBody();
+      updateSubtitle();
+    }
+    window.testAndSave = testAndSave;
+
+    function disconnect(cat, idx){
+      (connections[cat]||[]).splice(idx,1);
+      setLS(LS.CONN, connections);
+      renderTabBody();
+      updateSubtitle();
+    }
+    window.disconnect = disconnect;
+
+    function renderConnBadges(){
+      const el = document.getElementById('connBadges');
+      const flat = Object.entries(connections).flatMap(([k,v])=> (v||[]).filter(x=>x.connected).map(x=>({cat:k,...x})));
+      el.innerHTML = flat.length
+        ? flat.map(x=> `<span class="badge">✅ ${x.cat}: ${x.name}</span>`).join('')
+        : `<span class="badge">No connections</span>`;
+    }
+    renderConnBadges();
+    renderTabs(); renderTabBody();
+
+    /* ========= Starter: welcome if empty ========= */
+    if(!chat.length){
+      chat.push({
+        role:'assistant',
+        content:`Hi, I’m **${selWorker?.name || 'your AI Worker'}**. Ask me anything, or use the starter prompts above.\n`+
+                `I’ll keep answers short and help you reach value fast.`,
+        ts:Date.now()
+      });
+      renderChat();
+    }
+  </script>
+</body>
+</html>

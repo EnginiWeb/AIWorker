@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Engini - Select Skills</title>
+  <link rel="icon" type="image/png" href="image.png"/>
+
+  <style>
+    /* =========================
+       Light Glassmorphism Theme
+       (matches index.html)
+    ========================== */
+    :root{
+      --bg:#f6f8fb;
+      --ink:#0b1220;
+      --muted:#64748b;
+
+      --glass:rgba(255,255,255,.72);
+      --glass-strong:rgba(255,255,255,.86);
+      --line:rgba(15, 23, 42, .09);
+      --line-strong:rgba(15, 23, 42, .16);
+
+      --primary:#1677ff;
+      --primary-ink:#ffffff;
+      --ring:rgba(22,119,255,.18);
+      --success:#0bb07b;
+
+      --chip:#f1f5ff;
+      --chip-ink:#1f2937;
+
+      --shadow:0 14px 36px rgba(15,23,42,.10);
+      --shadow-sm:0 10px 26px rgba(15,23,42,.08);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font:14px/1.6 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      color:var(--ink);
+      background:
+        radial-gradient(1200px 600px at -10% -20%, rgba(22,119,255,.08), transparent 40%),
+        radial-gradient(900px 500px at 110% -10%, rgba(2,132,199,.10), transparent 40%),
+        radial-gradient(#dde6f5 1px, transparent 1px) 0 0 / 18px 18px,
+        var(--bg);
+      background-attachment:fixed;
+    }
+    .container{max-width:1120px;margin:0 auto;padding:0 20px}
+
+    /* Header (same as index) */
+    .header{
+      position:sticky;top:0;z-index:50;
+      background:var(--glass);backdrop-filter:saturate(1.2) blur(8px);
+      border-bottom:1px solid var(--line);
+    }
+    .header-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px}
+    .brand img{height:26px;width:auto}
+    .progress{display:flex;align-items:center;gap:8px;color:var(--muted);font-weight:600}
+    .progress .dot{display:inline-block;width:18px;height:18px;border:2px solid var(--line);border-radius:999px;vertical-align:-4px;background:#fff}
+    .progress .active .dot{background:var(--primary);border-color:var(--primary)}
+    .progress span{display:flex;align-items:center;gap:6px}
+    .cta-sales{height:36px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;font-weight:700}
+    .cta-sales:hover{box-shadow:var(--shadow-sm);border-color:var(--line-strong)}
+
+    .h1{font-size:30px;line-height:1.2;margin:22px 0 4px;text-align:center}
+    .muted{color:var(--muted)}
+    .lead{max-width:720px;margin:0 auto 8px;text-align:center}
+
+    /* Grid: left content + right pricing */
+    .grid-two{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin:18px 0}
+    @media (max-width:980px){.grid-two{grid-template-columns:1fr}}
+
+    .glass-card{
+      background:var(--glass-strong);backdrop-filter: blur(6px);
+      border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);
+      padding:14px;
+    }
+
+    .head-row{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap}
+    .titleblock{display:flex;flex-direction:column}
+    .title{font-size:22px;font-weight:800}
+    .subtitle{font-size:12px;color:var(--muted)}
+    .count{font-weight:800}
+
+    .btn{
+      height:38px;padding:0 14px;border-radius:10px;
+      border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:700;cursor:pointer
+    }
+    .btn:hover{box-shadow:var(--shadow-sm);border-color:var(--line-strong)}
+    .btn.primary{background:var(--primary);color:var(--primary-ink);border-color:var(--primary)}
+    .btn.primary.wide{width:100%}
+    .btn.danger{color:#b91c1c;border-color:#fecaca;background:#fff}
+    .btn.danger:hover{background:#fff5f5;border-color:#fca5a5}
+    .btn.ghost{background:#fff}
+
+    .wc-badge{letter-spacing:.12em;color:var(--muted);font-weight:700;font-size:11px}
+    .wc-divider{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:.6rem 0}
+
+    /* Worker hero */
+    .hero{display:flex;align-items:center;justify-content:center;gap:12px;margin:14px 0 6px}
+    .hero img{width:56px;height:56px;border-radius:999px;border:2px solid var(--line);object-fit:cover;background:#fff}
+
+    /* Two-column skill list */
+    .list-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px 12px;
+    }
+    @media (max-width:760px){
+      .list-grid{grid-template-columns:1fr;}
+    }
+
+    .skill-row{
+      display:flex;align-items:center;gap:10px;justify-content:space-between;
+      padding:10px;border:1px solid var(--line);border-radius:12px;background:#fff;
+      transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
+      min-height:74px;
+    }
+    .skill-row:hover{border-color:var(--line-strong)}
+    .skill-row.is-selected{border-color:var(--primary);box-shadow:0 0 0 2px var(--ring) inset;background:#f5faff}
+
+    .skill-left{display:flex;align-items:center;gap:10px;flex:1}
+    .check{
+      width:18px;height:18px;border-radius:6px;border:2px solid var(--primary);
+      display:grid;place-items:center;cursor:pointer;user-select:none;background:#fff;color:#fff;
+      flex-shrink:0;
+    }
+    .check svg{display:none}
+    .skill-row.is-selected .check{background:var(--primary);color:#fff}
+    .skill-row.is-selected .check svg{display:block}
+
+    .skill-title{font-weight:700}
+    .pill{display:inline-flex;align-items:center;border-radius:999px;border:1px solid var(--line);padding:4px 8px;font-size:12px;font-weight:700}
+    .pill.included{border-color:transparent;background:#e8faef;color:#0f5132}
+    .pill.extra{background:#fff;color:#374151}
+
+    .idx{font-size:12px;color:#6b7280;margin-left:8px}
+
+    /* Pricing box */
+    .price-row{display:flex;align-items:center;justify-content:space-between;margin:8px 0}
+    .total{display:flex;align-items:center;gap:6px;color:#15803d}
+    .total .sum{font-size:22px;font-weight:800}
+
+    /* Modals (same style as index) */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(9,22,36,.28);display:none;align-items:center;justify-content:center;z-index:120;backdrop-filter: blur(3px)}
+    .modal-backdrop.show{display:flex}
+    .modal{
+      width:min(760px,94vw);
+      background:#fff;border:1px solid var(--line);border-radius:12px;
+      box-shadow:0 24px 60px rgba(0,0,0,.16);overflow:hidden;color:var(--ink)
+    }
+    .modal header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line)}
+    .modal .h3{font-weight:800}
+    .modal .scroll{max-height:62vh;overflow:auto;padding:14px}
+    .modal .close{background:transparent;border:0;font-size:20px;cursor:pointer;color:var(--ink)}
+    .row-between{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-top:1px solid var(--line)}
+    input,textarea{font:inherit;color:var(--ink)}
+    .field{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff}
+
+
+    /* Two-column skill list */
+.list-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 12px;
+}
+@media (max-width: 760px) {
+  .list-grid { grid-template-columns: 1fr; }
+}
+
+.skill-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+  cursor: pointer;
+}
+.skill-row:hover { border-color: var(--line-strong); }
+.skill-row.is-selected {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--ring) inset;
+  background: #f5faff;
+}
+
+.skill-left { display: flex; align-items: center; gap: 10px; flex: 1; }
+.check {
+  width: 16px; height: 16px; border-radius: 5px;
+  border: 2px solid var(--primary);
+  display: grid; place-items: center;
+  background: #fff; color: #fff; flex-shrink: 0;
+}
+.check svg { display: none; }
+.skill-row.is-selected .check { background: var(--primary); color: #fff; }
+.skill-row.is-selected .check svg { display: block; }
+
+.skill-title { font-weight: 600; font-size: 14px; }
+.skill-meta {
+  display: flex; align-items: center; gap: 6px; margin-top: 2px;
+  font-size: 12px; color: var(--muted);
+}
+.pill.included { background: #e8faef; border: none; color: #0f5132; padding: 2px 6px; border-radius: 999px; }
+.pill.extra { background: #fff; border: 1px solid var(--line); color: #374151; padding: 2px 6px; border-radius: 999px; }
+
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner container">
+      <div class="brand">
+        <img src="logo.png" alt="Engini logo">
+      </div>
+      <div class="progress" aria-label="progress">
+        <span><span class="dot"></span> Select Worker</span>
+        <span>›</span>
+        <span class="active"><span class="dot"></span> Select Skills</span>
+        <span>›</span>
+        <span><span class="dot"></span> Onboard</span>
+        <span>›</span>
+        <span><span class="dot"></span> Chat Workspace</span>
+      </div>
+      <button class="cta-sales" id="btnTalkSales">Talk to Sales</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Hero -->
+    <section class="hero">
+      <img id="workerAvatar" src="" alt="Worker">
+      <div class="titleblock">
+        <h1 class="h1" style="margin:0;text-align:left">Select up to 10 Skills</h1>
+        <div id="workerDesc" class="muted">First 5 included – each extra adds $250.</div>
+      </div>
+    </section>
+    <p class="lead muted">The first <b>5</b> skills are included in the base price of <b>$2,000</b>. Each additional skill adds <b>$250</b>.</p>
+
+    <!-- Content grid -->
+    <section class="grid-two">
+      <!-- Left: Skills -->
+      <div class="glass-card">
+        <div class="head-row">
+          <div class="titleblock">
+            <div id="workerName" class="title">Worker</div>
+            <div class="subtitle">Choose up to 10 skills – first 5 are included.</div>
+          </div>
+          <div class="count">Selected: <span id="countSel">0</span> / 10</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button id="btnAddCustom" class="btn">Add custom skill</button>
+            <button id="btnClear" class="btn danger">Clear all</button>
+          </div>
+        </div>
+
+        <div class="wc-divider"></div>
+
+        <!-- Two-column skills container -->
+        <div id="chips" class="list-grid" aria-live="polite"></div>
+
+        <div class="wc-divider" style="margin-top:12px"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px">
+          <a href="index.html" class="btn">Back to Workers</a>
+          <button id="btnContinue" class="btn primary">Continue</button>
+        </div>
+      </div>
+
+
+
+  <!-- Talk to Sales Modal -->
+  <div id="salesModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="salesTitle">
+    <div class="modal" onclick="event.stopPropagation()">
+      <header>
+        <div id="salesTitle" class="h3">Talk to Sales</div>
+        <button class="close" onclick="closeModal('salesModal')">×</button>
+      </header>
+      <div class="scroll">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <input class="field" placeholder="Name">
+          <input class="field" placeholder="Email">
+          <input class="field" placeholder="Company">
+          <input class="field" placeholder="Phone">
+        </div>
+        <textarea class="field" style="margin-top:10px;height:120px" placeholder="Tell us about your needs"></textarea>
+      </div>
+      <div class="row-between">
+        <span class="muted">We will get back to you shortly.</span>
+        <button class="btn primary" onclick="closeModal('salesModal')">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Skill Modal -->
+  <div id="customModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="customTitle">
+    <div class="modal" onclick="event.stopPropagation()">
+      <header>
+        <div id="customTitle" class="h3">Add Custom Skill</div>
+        <button class="close" onclick="closeModal('customModal')">×</button>
+      </header>
+      <div class="scroll">
+        <input id="customSkillInput" class="field" placeholder="e.g., PO tracking, Supplier finder" />
+        <p class="muted" style="margin-top:8px">Tip: keep skills short and action-oriented. You can add up to 14 skills in the list and choose 10.</p>
+      </div>
+      <div class="row-between">
+        <span class="muted">Skill will be marked as “(Custom)”</span>
+        <div style="display:flex;gap:8px">
+          <button class="btn" onclick="closeModal('customModal')">Cancel</button>
+          <button id="customSkillSave" class="btn primary">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ------- Local Storage Keys -------
+    const LS = {
+      WORKER:'engini.selectedWorker',
+      SKILLS:'engini.selectedSkills',
+      PRICING:'engini.pricing'
+    };
+
+    // ------- Worker & Skills data -------
+    const WORKER_SKILLS = {
+      procurement: [
+        'Invoice capture (OCR/EDI)',
+        'Duplicate supplier/invoice detection',
+        '2/3-Way Match (Invoice ↔ PO ↔ GR)',
+        'PO & supplier validation',
+        'GL / cost center coding',
+        'Tax/VAT compliance checks',
+        'Exception flagging & routing',
+        'Payment proposal creation',
+        'Execute supplier payments',
+        'Vendor statement reconciliation',
+        'Contract renewal monitoring',
+        'Supplier performance tracking',
+        'Policy enforcement',
+        'Audit-ready AP reporting',
+      ],
+      finance: [
+        'Bank reconciliation',
+        'Recurring journal entries',
+        'Month-end data consolidation',
+        'Accruals & reclasses',
+        'AP/AR aging reports',
+        'Expense anomaly detection',
+        'Cash flow forecasting',
+        'Trial balance drafts',
+        'VAT/GST reporting',
+        'P&L by cost center',
+        'Payment batch scheduling',
+        'Payroll to GL integration',
+        'Variance analysis',
+        'DSO/DPO/OPEX KPI tracking'
+      ],
+      hr: [
+        'New-hire onboarding (accounts/systems)',
+        'HRIS record creation',
+        'Access provisioning/deprovisioning',
+        'PTO/leave automation',
+        'Payslip/tax form generation',
+        'Compliance training reminders',
+        'HR ticket FAQ resolution',
+        'Performance review reminders',
+        'Training completion tracking',
+        'Org chart updates',
+        'Headcount & attrition reports',
+        'Benefits enrollment',
+        'Expense reimbursement processing',
+        'HR policy compliance checks'
+      ],
+      it: [
+        'Auto-triage incoming tickets',
+        'Password resets',
+        'Account unlocks',
+        'Incident categorization/prioritization',
+        'Close duplicates/low-value tickets',
+        'Software package deployment',
+        'Security patching',
+        'User provisioning/deprovisioning',
+        'Intelligent ticket routing',
+        'SLA/MTTR KPI reporting',
+        'Asset inventory maintenance',
+        'Compliance/security scans',
+        'Weekly IT ops reports',
+        'Uptime/alert monitoring'
+      ],
+      aml: [
+        'Sanctions/PEP Alert Triage',
+        'False-positive suppression',
+        'Payments sanctions screening',
+        'AML transaction monitoring (L1 review)',
+        'KYC/KYB onboarding docs',
+        'Entity resolution & de-duplication',
+        'Watchlist/data enrichment',
+        'Adverse media monitoring',
+        'Case assembly & EDD pack',
+        'Risk scoring & KYC refresh',
+        'Narrative generation (GenAI)',
+        'SAR/STR drafting assist',
+        'Quality assurance & audit trail',
+        'Workload prioritization & SLA'
+      ],
+      custom: []
+    };
+
+    // ------- Utils -------
+    function getLS(key, fallback=null){ try{ return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }catch{ return fallback; } }
+    function setLS(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+    function openModal(id){ document.getElementById(id).classList.add('show'); }
+    function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+    function uiAvatar(name){ return `https://ui-avatars.com/api/?name=${encodeURIComponent(name||'AI')}&background=E6EEF8&color=1B2A4A&size=96&bold=true`; }
+
+    // ------- Selected worker -------
+    const selWorker = getLS(LS.WORKER, null);
+    if(!selWorker){ window.location.href = 'index.html'; }
+
+    // ------- Elements -------
+    const chipsEl = document.getElementById('chips');
+    const countSel = document.getElementById('countSel');
+    const selInfoCount = document.getElementById('selInfoCount');
+    const priceBase = document.getElementById('priceBase');
+    const priceExtra = document.getElementById('priceExtra');
+    const priceTotal = document.getElementById('priceTotal');
+    const btnContinue = document.getElementById('btnContinue');
+    const btnClear = document.getElementById('btnClear');
+    const btnAddCustom = document.getElementById('btnAddCustom');
+    const workerName = document.getElementById('workerName');
+    const workerDesc = document.getElementById('workerDesc');
+    const workerAvatar = document.getElementById('workerAvatar');
+
+    document.getElementById('btnTalkSales').onclick = () => openModal('salesModal');
+
+    // ------- Header info -------
+    workerName.textContent = selWorker?.name || 'Worker';
+    workerDesc.textContent = 'Choose up to 10 skills – first 5 are included.';
+    workerAvatar.src = getLS('engini.workerAvatar', uiAvatar(selWorker?.name));
+    workerAvatar.onerror = () => { workerAvatar.src = uiAvatar(selWorker?.name); };
+
+    // ------- Pricing rules -------
+    const MAX_SELECT = 10;
+    const BASE_INCLUDED = 5;
+    const BASE_PRICE = 2000;
+    const EXTRA_PRICE = 250;
+
+    // ------- State -------
+    let allSkills = [...(WORKER_SKILLS[selWorker.id] || [])];
+    let selectedSkills = getLS(LS.SKILLS, null);
+    if(!selectedSkills){
+      selectedSkills = allSkills.slice(0, Math.min(BASE_INCLUDED, allSkills.length));
+    }else{
+      selectedSkills = selectedSkills.filter(s => allSkills.includes(s) || s.endsWith('(Custom)'));
+    }
+function skillRowTemplate(label, index, isSelected) {
+  const included = (index + 1) <= BASE_INCLUDED;
+  return `
+    <div class="skill-row ${isSelected ? 'is-selected' : ''}" data-skill="${encodeURIComponent(label)}">
+      <div class="skill-left">
+        <div class="check" role="checkbox" aria-checked="${isSelected}">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 6 9 17l-5-5"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="skill-title">${label}</div>
+          <div class="skill-meta">
+            <span class="pill ${included ? 'included' : 'extra'}"></span>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+
+    function renderSkills(){
+      // Create a document fragment for performance
+      const frag = document.createDocumentFragment();
+      allSkills.forEach((s, i)=>{
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = skillRowTemplate(s, i, selectedSkills.includes(s));
+        frag.appendChild(wrapper.firstElementChild);
+      });
+      chipsEl.innerHTML = '';
+      chipsEl.appendChild(frag);
+
+      chipsEl.querySelectorAll('.skill-row').forEach(row=>{
+        const label = decodeURIComponent(row.getAttribute('data-skill'));
+        const box   = row.querySelector('.check');
+        const toggle = ()=>{
+          const isSelected = selectedSkills.includes(label);
+          if(isSelected){
+            selectedSkills = selectedSkills.filter(x=>x!==label);
+          }else{
+            if(selectedSkills.length >= MAX_SELECT) return;
+            selectedSkills.push(label);
+          }
+          setLS(LS.SKILLS, selectedSkills); // persist
+          renderSkills();
+        };
+        row.addEventListener('click', (e)=>{ if(e.target.closest('.check') || e.target.closest('.skill-left')) toggle(); });
+        box.addEventListener('click', (e)=>{ e.stopPropagation(); toggle(); });
+      });
+
+      updatePricing();
+    }
+
+    function updatePricing(){
+      const count = selectedSkills.length;
+      countSel.textContent = count;
+      selInfoCount.textContent = count;
+
+      const extraCount = Math.max(0, count - BASE_INCLUDED);
+      const extra = extraCount * EXTRA_PRICE;
+      const total = BASE_PRICE + extra;
+
+      priceBase.textContent = `$${BASE_PRICE.toLocaleString()}`;
+      priceExtra.textContent = `$${extra.toLocaleString()}`;
+      priceTotal.textContent = `$${total.toLocaleString()}`;
+
+      setLS(LS.PRICING, {base:BASE_PRICE, extra, total, count});
+    }
+
+    // Clear
+    btnClear.addEventListener('click', ()=>{
+      selectedSkills = [];
+      setLS(LS.SKILLS, selectedSkills);
+      renderSkills();
+    });
+
+    // Custom skill modal
+    const customSkillInput = document.getElementById('customSkillInput');
+    const customSkillSave = document.getElementById('customSkillSave');
+
+    btnAddCustom.addEventListener('click', ()=>{
+      if(allSkills.length >= 14){
+        alert('You already have 14 skills in the list.\nRemove one to add a custom skill.');
+        return;
+      }
+      customSkillInput.value = '';
+      openModal('customModal');
+      requestAnimationFrame(()=> customSkillInput.focus());
+    });
+
+    customSkillSave.addEventListener('click', ()=>{
+      const name = (customSkillInput.value||'').trim();
+      if(!name){ customSkillInput.focus(); return; }
+      const label = `${name} (Custom)`;
+      if(allSkills.length < 14){
+        allSkills.push(label);
+        if(selectedSkills.length < MAX_SELECT){ selectedSkills.push(label); }
+        setLS(LS.SKILLS, selectedSkills);
+        renderSkills();
+      }
+      closeModal('customModal');
+    });
+
+    // Continue
+    btnContinue.addEventListener('click', ()=>{
+      const extraCount = Math.max(0, selectedSkills.length - BASE_INCLUDED);
+      setLS(LS.PRICING, {
+        base: BASE_PRICE,
+        extra: extraCount * EXTRA_PRICE,
+        total: BASE_PRICE + extraCount * EXTRA_PRICE,
+        count: selectedSkills.length
+      });
+      window.location.href = 'onboard.html';
+    });
+
+    // Initial render
+    renderSkills();
+  </script>
+</body>
+</html>
