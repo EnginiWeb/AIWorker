@@ -214,11 +214,18 @@
           <input id="fRole" class="field" placeholder="Role/Title" autocomplete="organization-title">
         </div>
         <input id="fPass" class="field" type="password" placeholder="Password (min 6 chars)" autocomplete="new-password">
-        <div style="display:flex;align-items:center;gap:8px;margin-top:10px">
-          <button class="sso" onclick="mockSSO()">Continue with SSO</button>
-          <span class="muted" style="font-size:12px">or</span>
-          <button class="ok" onclick="submitSignup()">Create account & start</button>
-        </div>
+<div style="display:flex;align-items:center;gap:8px;margin-top:10px">
+  <button class="sso" onclick="mockSSO()">Continue with SSO</button>
+  <span class="muted" style="font-size:12px">or</span>
+  <a 
+    href="https://app.engini.io/login?_gl=1*kzwknz*_ga*MTk1NzI5MjYwNS4xNzU2ODk2MzMz*_ga_ZP4XQNTD22*czE3NTkxNTU3ODEkbzM3JGcwJHQxNzU5MTU1NzgxJGo2MCRsMCRoMA..*_gcl_au*MjYyMDc0OTE2LjE3NTY4OTYzMzQ." 
+    class="ok"
+    style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center"
+  >
+    Create account & start
+  </a>
+</div>
+
         <div id="signupError" class="muted" style="color:#b42318;margin-top:8px;display:none">Please fill all fields properly.</div>
       </div>
       <div style="display:flex;align-items:center;justify-content:flex-end;gap:12px;padding:12px 14px;border-top:1px solid var(--line)">
