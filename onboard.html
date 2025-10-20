@@ -1,263 +1,327 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Engini - Review & Activate Worker</title>
-  <link rel="icon" type="image/png" href="image.png"/>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    .list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .list li {
-      background-color: var(--chip, #f1f5ff);
-      color: var(--chip-ink, #1f2937);
-      border: 1px solid var(--line, #e5e7eb);
-      border-radius: 9999px;
-      padding: 6px 12px;
-      font-size: 13px;
-      white-space: nowrap;
-    }
-
-    .panel{
-      width: 100%;
-    }
-  </style>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Engini - Review & Activate Worker</title>
+    <link rel="icon" type="image/png" href="image.png"/>
+    <link rel="stylesheet" href="style.css">
+    <style>
+          .btn{
+            height:36px;padding:0 14px;border-radius:10px;
+            border:1px solid var(--line);background:var(--card);color:var(--ink);
+            font-weight:600; 
+            cursor:pointer;transition:box-shadow .2s,border-color .2s,background .2s
+        }
+        .h1 { font-size: 30px; line-height: 1.2; margin: 22px 0 6px; }
+        .lead { max-width: 720px; margin: 0 auto 12px; text-align: center; }
+        .muted { color: var(--muted); }
+        .layout { 
+            display: grid; 
+            grid-template-columns: minmax(0, 1fr) 320px; 
+            gap: 18px; 
+            margin: 16px auto;
+        }
+        @media (max-width: 1100px) { .layout { grid-template-columns: 1fr; } }
+        .panel {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            box-shadow: 0 4px 14px rgba(9, 30, 66, .05);
+        }
+        .panel .inner { padding: 16px; }
+        .worker-row { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            margin-bottom: 10px;
+        }
+        .avatar { 
+            width: 48px; 
+            height: 48px; 
+            border-radius: 999px; 
+            border: 2px solid var(--line); 
+            object-fit: cover; 
+            background: #fff;
+        }
+        .scrollbox {
+            max-height: 320px;
+            overflow: auto;
+            border: 1px dashed var(--line);
+            border-radius: 10px;
+            padding: 12px;
+            background: var(--card);
+        }
+        .list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .list li {
+            background-color: var(--chip);
+            color: var(--chip-ink);
+            border: 1px solid var(--line);
+            border-radius: 9999px;
+            padding: 6px 12px;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+        .btn {
+            height: 36px; padding: 0 14px; border-radius: 10px;
+            border: 1px solid var(--line); background: var(--card); color: var(--ink);
+            font-weight: 700; cursor: pointer; transition: box-shadow .2s, border-color .2s, background .2s;
+        }
+        .btn.primary { background: var(--primary); color: var(--primary-ink); border-color: var(--primary); }
+        .link {
+            text-decoration: none; display: inline-flex; align-items: center;
+            height: 38px; padding: 0 14px; border-radius: 10px;
+            border: 1px solid var(--line); background: var(--card); color: var(--ink); font-weight: 700;
+        }
+        .foot-actions { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-top: 12px;
+        }
+        .modal .row { display: flex; gap: 10px; }
+        .modal .field { width: 100%; padding: 10px; border-radius: 10px; }
+        .modal textarea { height: 120px; margin-top: 10px; }
+        .modal .ok { 
+            background: var(--primary); color: #fff; border: 1px solid var(--primary); 
+            height: 38px; border-radius: 10px; padding: 0 14px; font-weight: 700;
+        }
+        .modal .sso { 
+            background: #111827; color: #fff; border: 1px solid #111827; 
+            height: 38px; border-radius: 10px; padding: 0 14px; font-weight: 700;
+        }
+        .header-inner {
+            display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 64px; gap: 12px;
+        }
+        .brand { font-weight: 700; }
+        .progress { font-weight: 700; }
+        .header-actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+       
+    </style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="header">
-    <div class="header-inner container">
-      <div class="brand">
-        <img src="logo.png" alt="Engini logo">
-      </div>
-      <div class="progress" aria-label="progress">
-        <span data-step="1"><span class="dot"></span> Select Worker</span>
-        <span>›</span>
-        <span data-step="2"><span class="dot"></span> Select Skills</span>
-        <span>›</span>
-        <span data-step="3" class="active"><span class="dot"></span> Onboard</span>
-        <span>›</span>
-        <span data-step="4"><span class="dot"></span> Chat Workspace</span>
-      </div>
-      <button class="cta-sales" id="btnTalkSales">Talk to Sales</button>
-    </div>
-  </header>
-
-  <main class="container">
-    <h1 class="h1">Review & Activate Worker</h1>
-    <p class="lead">Confirm the worker and selected Skills. Pricing updates are transparent and based on your selection.</p>
-
-    <div class="layout">
-      <section class="panel">
-        <div class="inner">
-          <div class="worker-row">
-            <img id="workerAvatar" class="avatar" src="" alt="worker"/>
-            <div>
-              <div id="workerName" style="font-weight:800">Worker</div>
-              <div id="workerDesc" class="muted" style="font-size:13px">Selected Skills appear below.</div>
+    <header class="header">
+        <div class="header-inner container">
+            <div class="brand">
+                <img id="brandLogo" src="logo.png" alt="Engini logo">
             </div>
-          </div>
-
-          <div class="row-between" style="margin:6px 0 8px">
-            <div class="muted"><b id="skillsCount">0</b> Skills selected</div>
-            <a class="link" href="skills.html">Manage Skills</a>
-          </div>
-
-          <div class="scrollbox" id="skillsList" aria-live="polite">
-            <!-- list injected -->
-          </div>
-
-          <div class="foot-actions">
-            <a class="link" href="skills.html">Back to Skills</a>
-            <button id="btnOnboard" class="btn primary">Onboard Worker</button>
-          </div>
+            <div class="progress" aria-label="progress">
+                <span data-step="1"><span class="dot"></span> Select Worker</span>
+                <span>›</span>
+                <span data-step="2"><span class="dot"></span> Select Skills</span>
+                <span>›</span>
+                <span data-step="3" class="active"><span class="dot"></span> Onboard</span>
+                <span>›</span>
+                <span data-step="4"><span class="dot"></span> Chat Workspace</span>
+            </div>
+            <div class="header-actions">
+                <button class="btn" id="btnTalkSales" type="button">Talk to Sales</button>
+                <button class="btn" id="themeToggle" type="button">Dark mode</button>
+            </div>
         </div>
-      </section>
+    </header>
+    <main class="container">
+        <h1 class="h1">Review & Activate Worker</h1>
+        <p class="lead muted">Confirm the worker and selected Skills before onboarding your new AI Worker.</p>
+        <div class="layout">
+            <section class="panel">
+                <div class="inner">
+                    <div class="worker-row">
+                        <img id="workerAvatar" class="avatar" src="" alt="worker"/>
+                        <div>
+                            <div id="workerName" style="font-weight:800">Worker</div>
+                            <div id="workerDesc" class="muted" style="font-size:13px">You can always adjust Skills later.</div>
+                        </div>
+                    </div>
+                    <div class="row-between" style="margin:6px 0 8px">
+                        <div class="muted"><b id="skillsCount">0</b> Skills selected</div>
+                        <a class="link" href="skills.html">Manage Skills</a>
+                    </div>
+                    <div class="scrollbox" id="skillsList" aria-live="polite">
+                        </div>
+                    <div class="foot-actions">
+                        <a class="link" href="skills.html">Back to Skills</a>
+                        <button id="btnOnboard" class="btn primary">Onboard Worker</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <div id="salesModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="salesTitle" onclick="closeModal('salesModal')">
+        <div class="modal" onclick="event.stopPropagation()">
+            <header>
+                <div id="salesTitle" class="h3">Talk to Sales</div>
+                <button class="close" onclick="closeModal('salesModal')">×</button>
+            </header>
+            <div class="scroll">
+                <div class="row" style="margin-bottom:10px">
+                    <input class="field" placeholder="Name">
+                    <input class="field" placeholder="Email">
+                </div>
+                <div class="row">
+                    <input class="field" placeholder="Company">
+                    <input class="field" placeholder="Phone">
+                </div>
+                <textarea class="field" placeholder="Tell us about your needs"></textarea>
+            </div>
+            <div class="row-between">
+                <span class="muted">We’ll get back to you shortly.</span>
+                <button class="ok" onclick="closeModal('salesModal')">Send</button>
+            </div>
+        </div>
     </div>
-  </main>
-
-  <!-- Modal: Talk to Sales -->
-  <div id="salesModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="salesTitle" onclick="closeModal('salesModal')">
-    <div class="modal" onclick="event.stopPropagation()">
-      <header>
-        <div id="salesTitle" class="h3">Talk to Sales</div>
-        <button class="close" onclick="closeModal('salesModal')">×</button>
-      </header>
-      <div class="scroll">
-        <div class="row" style="margin-bottom:10px">
-          <input class="field" placeholder="Name">
-          <input class="field" placeholder="Email">
+    <div id="signupModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="signupTitle" onclick="closeModal('signupModal')">
+        <div class="modal" onclick="event.stopPropagation()">
+            <header>
+                <div id="signupTitle" class="h3">Create account & start</div>
+                <button class="close" onclick="closeModal('signupModal')">×</button>
+            </header>
+            <div class="scroll">
+                <div class="row" style="margin-bottom:10px">
+                    <input id="fName" class="field" placeholder="Full name" autocomplete="name">
+                    <input id="fEmail" class="field" placeholder="Work email" autocomplete="email">
+                </div>
+                <div class="row" style="margin-bottom:10px">
+                    <input id="fCompany" class="field" placeholder="Company" autocomplete="organization">
+                    <input id="fRole" class="field" placeholder="Role/Title" autocomplete="organization-title">
+                </div>
+                <input id="fPass" class="field" type="password" placeholder="Password (min 6 chars)" autocomplete="new-password">
+                <div class="row" style="margin-top:10px; justify-content:center; align-items: center;">
+                    <button class="sso" onclick="mockSSO()">Continue with SSO</button>
+                    <span class="muted" style="font-size:12px">or</span>
+                    <button class="ok" onclick="submitSignup()">Create account & start</button>
+                </div>
+                <a href="https://app.engini.io/login" class="muted" style="font-size:12px;text-align:center;display:block;margin-top:8px">
+                    Already have an account? Log in
+                </a>
+                <div id="signupError" class="muted" style="color:#b42318;margin-top:8px;display:none">Please fill all fields properly.</div>
+            </div>
+            <div class="row-between">
+                <button class="btn" onclick="closeModal('signupModal')">Cancel</button>
+            </div>
         </div>
-        <div class="row">
-          <input class="field" placeholder="Company">
-          <input class="field" placeholder="Phone">
-        </div>
-        <textarea class="field" style="margin-top:10px;height:120px" placeholder="Tell us about your needs"></textarea>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-top:1px solid var(--line)">
-        <span class="muted">We’ll get back to you shortly.</span>
-        <button class="ok" onclick="closeModal('salesModal')">Send</button>
-      </div>
     </div>
-  </div>
+    <script>
+        const LS = {
+            WORKER: 'engini.selectedWorker',
+            SKILLS: 'engini.selectedSkills',
+            SIGNUP: 'engini.signup'
+        };
+        const STEP_URLS = { 1: 'index.html', 2: 'skills.html', 3: 'onboard.html', 4: 'chat.html' };
+       
+        const getLS = (key, fallback = null) => {
+            try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); } catch { return fallback; }
+        };
+        const setLS = (key, val) => localStorage.setItem(key, JSON.stringify(val));
+        const openModal = (id) => document.getElementById(id).classList.add('show');
+        const closeModal = (id) => document.getElementById(id).classList.remove('show');
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        const uiAvatar = (name) => `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'AI')}&background=E6EEF8&color=1B2A4A&size=96&bold=true`;
 
-  <!-- Modal: Signup -->
-  <div id="signupModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="signupTitle" onclick="closeModal('signupModal')">
-    <div class="modal" onclick="event.stopPropagation()">
-      <header>
-        <div id="signupTitle" class="h3">Create account & start</div>
-        <button class="close" onclick="closeModal('signupModal')">×</button>
-      </header>
-      <div class="scroll">
-        <div class="row" style="margin-bottom:10px">
-          <input id="fName" class="field" placeholder="Full name" autocomplete="name">
-          <input id="fEmail" class="field" placeholder="Work email" autocomplete="email">
-        </div>
-        <div class="row" style="margin-bottom:10px">
-          <input id="fCompany" class="field" placeholder="Company" autocomplete="organization">
-          <input id="fRole" class="field" placeholder="Role/Title" autocomplete="organization-title">
-        </div>
-        <input id="fPass" class="field" type="password" placeholder="Password (min 6 chars)" autocomplete="new-password">
+        const setActiveProgress = () => {
+            const path = (location.pathname || '').toLowerCase();
+            let step = 1;
+            if (path.includes('skills')) step = 2;
+            else if (path.includes('onboard')) step = 3;
+            else if (path.includes('chat')) step = 4;
+            document.querySelectorAll('.progress [data-step]').forEach(el => {
+                el.classList.toggle('active', Number(el.dataset.step) === step);
+            });
+        };
+        const wireProgressNav = () => {
+            document.querySelectorAll('.progress [data-step]').forEach(el => {
+                el.addEventListener('click', () => {
+                    const step = Number(el.dataset.step);
+                    window.location.href = STEP_URLS[step] || 'index.html';
+                });
+            });
+        };
 
-        <div style="display:flex;align-items:center;gap:8px;margin-top:10px">
-          <button class="sso" onclick="mockSSO()">Continue with SSO</button>
-          <span class="muted" style="font-size:12px">or</span>
-          <button class="ok" onclick="submitSignup()">Create account & start</button>
-        </div>
-
-        <a href="https://app.engini.io/login" class="muted" style="font-size:12px;text-align:center;display:block;margin-top:8px">
-          Already have an account? Log in
-        </a>
-
-        <div id="signupError" class="muted" style="color:#b42318;margin-top:8px;display:none">Please fill all fields properly.</div>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:flex-end;gap:12px;padding:12px 14px;border-top:1px solid var(--line)">
-        <button class="btn" onclick="closeModal('signupModal')">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const LS = {
-      WORKER:'engini.selectedWorker',
-      SKILLS:'engini.selectedSkills',
-      PRICING:'engini.pricing',
-      SIGNUP:'engini.signup'
-    };
-
-    const STEP_URLS = { 1:'index.html', 2:'skills.html', 3:'onboard.html', 4:'chat.html' };
-
-    function setActiveProgressByPath() {
-      const path = (location.pathname || '').toLowerCase();
-      let step = 1;
-      if (path.includes('skills')) step = 2;
-      else if (path.includes('onboard')) step = 3;
-      else if (path.includes('chat')) step = 4;
-      document.querySelectorAll('.progress [data-step]').forEach(el => {
-        el.classList.remove('active');
-        if (Number(el.dataset.step) === step) el.classList.add('active');
-      });
-    }
-
-    function wireProgressNav() {
-      document.querySelectorAll('.progress [data-step]').forEach(el => {
-        el.addEventListener('click', () => {
-          const step = Number(el.dataset.step);
-          const url = STEP_URLS[step] || 'index.html';
-          window.location.href = url;
+        const submitSignup = () => {
+            const name = document.getElementById('fName').value.trim();
+            const email = document.getElementById('fEmail').value.trim();
+            const company = document.getElementById('fCompany').value.trim();
+            const role = document.getElementById('fRole').value.trim();
+            const pass = document.getElementById('fPass').value;
+            const errorEl = document.getElementById('signupError');
+            if (!name || !email || !company || !role || !pass || pass.length < 6) {
+                errorEl.style.display = 'block';
+                return;
+            }
+            errorEl.style.display = 'none';
+            setLS(LS.SIGNUP, { name, email, company, role, ts: Date.now() });
+            closeModal('signupModal');
+            window.location.href = 'chat.html';
+        };
+        const mockSSO = () => {
+            setLS(LS.SIGNUP, { sso: true, email: 'sso@example.com', ts: Date.now() });
+            closeModal('signupModal');
+            window.location.href = 'chat.html';
+        };
+        window.submitSignup = submitSignup;
+        window.mockSSO = mockSSO;
+    
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        const brandLogo = document.getElementById('brandLogo');
+        const updateLogo = (isDark) => {
+            brandLogo.src = isDark ? 'logo_light.png' : 'logo.png';
+        };
+        const setInitialTheme = () => {
+            const isDarkInitial = localStorage.getItem('theme') === 'dark';
+            if (isDarkInitial) {
+                html.classList.add('dark-mode');
+                if (themeToggle) themeToggle.textContent = 'Light Mode';
+            } else {
+                if (themeToggle) themeToggle.textContent = 'Dark mode';
+            }
+            if (brandLogo) updateLogo(isDarkInitial);
+        };
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                html.classList.toggle('dark-mode');
+                const isDark = html.classList.contains('dark-mode');
+                themeToggle.textContent = isDark ? 'Light Mode' : 'Dark mode';
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                if (brandLogo) updateLogo(isDark);
+            });
+        }
+ 
+        document.addEventListener('DOMContentLoaded', () => {
+            const selWorker = getLS(LS.WORKER, null);
+            const selectedSkills = getLS(LS.SKILLS, []);
+            const avatarUrl = getLS('engini.workerAvatar', uiAvatar(selWorker?.name));
+            if (!selWorker) {
+                location.href = 'index.html';
+                return;
+            }
+   
+            document.getElementById('workerName').textContent = selWorker.name || 'Worker';
+            const avatarEl = document.getElementById('workerAvatar');
+            avatarEl.src = avatarUrl;
+            avatarEl.onerror = () => { avatarEl.src = uiAvatar(selWorker.name); };
+     
+            document.getElementById('skillsCount').textContent = selectedSkills.length;
+            document.getElementById('skillsList').innerHTML = `
+                <ul class="list">
+                    ${selectedSkills.map(s => `<li>${s}</li>`).join('')}
+                </ul>
+            `;
+            setInitialTheme();
+            setActiveProgress();
+            wireProgressNav();
+       
+            document.getElementById('btnOnboard').onclick = () => openModal('signupModal');
+            document.getElementById('btnTalkSales').onclick = () => openModal('salesModal');
         });
-      });
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      setActiveProgressByPath();
-      wireProgressNav();
-    });
-
-    function getLS(key, fallback = null) {
-      try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); } catch { return fallback; }
-    }
-
-    function setLS(key, val) {
-      localStorage.setItem(key, JSON.stringify(val));
-    }
-
-    function uiAvatar(name) {
-      return `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'AI')}&background=E6EEF8&color=1B2A4A&size=96&bold=true`;
-    }
-
-    function openModal(id) {
-      document.getElementById(id).classList.add('show');
-    }
-
-    function closeModal(id) {
-      document.getElementById(id).classList.remove('show');
-    }
-
-    const selWorker = getLS(LS.WORKER, null);
-    const selectedSkills = getLS(LS.SKILLS, []);
-    const pricing = getLS(LS.PRICING, { base: 2000, extra: 0, total: 2000, count: selectedSkills.length });
-
-    if (!selWorker) {
-      location.href = 'index.html';
-    }
-
-    document.getElementById('btnTalkSales').onclick = () => openModal('salesModal');
-    document.getElementById('btnOnboard').onclick = () => openModal('signupModal');
-
-    document.getElementById('workerName').textContent = selWorker?.name || 'Worker';
-    document.getElementById('workerDesc').textContent = 'You can always adjust Skills later.';
-    const avatarUrl = getLS('engini.workerAvatar', uiAvatar(selWorker?.name));
-    const avatarEl = document.getElementById('workerAvatar');
-    avatarEl.src = avatarUrl;
-    avatarEl.onerror = () => { avatarEl.src = uiAvatar(selWorker?.name); };
-
-    document.getElementById('skillsCount').textContent = selectedSkills.length;
-    document.getElementById('skillsList').innerHTML = `
-      <ul class="list">
-        ${selectedSkills.map(s => `<li>${s}</li>`).join('')}
-      </ul>
-    `;
-
-    document.getElementById('priceBase').textContent = `$${(pricing.base ?? 2000).toLocaleString()}`;
-    document.getElementById('priceExtra').textContent = `$${(pricing.extra ?? 0).toLocaleString()}`;
-    document.getElementById('priceTotal').textContent = `$${(pricing.total ?? 2000).toLocaleString()}`;
-
-    function submitSignup() {
-      const name = document.getElementById('fName').value.trim();
-      const email = document.getElementById('fEmail').value.trim();
-      const company = document.getElementById('fCompany').value.trim();
-      const role = document.getElementById('fRole').value.trim();
-      const pass = document.getElementById('fPass').value;
-      const errorEl = document.getElementById('signupError');
-
-      if (!name || !email || !company || !role || !pass || pass.length < 6) {
-        errorEl.style.display = 'block';
-        return;
-      }
-
-      errorEl.style.display = 'none';
-      setLS(LS.SIGNUP, { name, email, company, role, ts: Date.now() });
-      closeModal('signupModal');
-      window.location.href = 'chat.html';
-    }
-
-    function mockSSO() {
-      setLS(LS.SIGNUP, { sso: true, email: 'sso@example.com', ts: Date.now() });
-      closeModal('signupModal');
-      window.location.href = 'chat.html';
-    }
-
-    window.submitSignup = submitSignup;
-    window.mockSSO = mockSSO;
-  </script>
+    </script>
 </body>
 </html>

@@ -1,7 +1,5 @@
-/* =============== 1. Design Tokens (CSS Variables) =============== */
-
 :root {
-  /* Light Mode - Consolidated Values */
+  
   --bg: #f6f8fb;
   --card: #ffffff;
   --ink: #0b1220;
@@ -24,7 +22,6 @@
   --backdrop: rgba(9, 22, 36, 0.32);
 }
 
-/* DARK MODE THEME - ENGini STYLE */
 html.dark-mode {
   --bg: #0b0f17;
   --ink: #f1f5f9;
@@ -48,9 +45,6 @@ html.dark-mode {
   --shadow-sm: 0 10px 26px rgba(0, 0, 0, 0.5);
   --backdrop: rgba(15, 23, 42, 0.7);
 }
-
-
-/* =============== 2. Base & Global Styles =============== */
 
 *,
 *::before,
@@ -90,7 +84,6 @@ html.dark-mode body {
   padding: 0 20px;
 }
 
-/* Headings/Text */
 .h1 {
   font-size: 30px;
   line-height: 1.2;
@@ -137,7 +130,6 @@ html.dark-mode body {
   font-size: 18px;
 }
 
-/* Forms & Inputs */
 input,
 textarea {
   font: inherit;
@@ -178,10 +170,6 @@ html.dark-mode .field:focus {
   border-color: var(--primary);
 }
 
-
-/* =============== 3. Component Styles =============== */
-
-/* --- Header & Progress --- */
 .header {
   position: sticky;
   top: 0;
@@ -253,7 +241,6 @@ html.dark-mode .header {
   border-bottom: 1px solid var(--line);
 }
 
-/* --- Buttons & Links --- */
 .btn {
   height: 36px;
   padding: 0 12px;
@@ -333,7 +320,6 @@ html.dark-mode .header {
   font-weight: 700;
 }
 
-/* Dark Mode Button Overrides */
 html.dark-mode .cta-sales {
   background: rgba(255, 255, 255, 0.08);
   color: var(--ink);
@@ -361,7 +347,6 @@ html.dark-mode .btn:hover {
   border-color: var(--line-strong);
 }
 
-/* --- Worker Card (wc-card) --- */
 .wc-card {
   background: var(--glass-strong);
   border: 1px solid var(--line);
@@ -433,7 +418,6 @@ html.dark-mode .wc-card.is-selected {
   line-height: 1.3;
 }
 
-/* --- Card Sections & Pills --- */
 .wc-divider {
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--line), transparent);
@@ -469,7 +453,6 @@ html.dark-mode .wc-pill {
   color: var(--ink);
 }
 
-/* --- App Icons & Logos --- */
 .logo-row {
   display: flex;
   flex-wrap: wrap;
@@ -533,7 +516,6 @@ html.dark-mode .wc-app img {
   border-color: var(--line);
 }
 
-/* --- KPIs & Actions --- */
 .kpis {
   display: flex;
   flex-direction: column;
@@ -557,7 +539,6 @@ html.dark-mode .wc-app img {
   margin: 18px 0 38px;
 }
 
-/* --- Modals --- */
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -622,7 +603,6 @@ html.dark-mode .modal-backdrop {
   background: var(--backdrop);
 }
 
-/* --- App Picker Grid --- */
 .apps-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -693,7 +673,6 @@ html.dark-mode .app-tile.selected {
   box-shadow: 0 0 0 2px var(--ring) inset;
 }
 
-/* --- Collapsibles --- */
 .wc-more {
   height: 0;
   overflow: hidden;
@@ -717,9 +696,6 @@ html.dark-mode .app-tile.selected {
   opacity: 1;
 }
 
-/* =============== 4. Layout & Utility Styles =============== */
-
-/* **UPDATED FOR 3 CARDS PER ROW** */
 .cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

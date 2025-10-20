@@ -1,277 +1,577 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Engini - Chat Workspace</title>
-  <link rel="icon" type="image/png" href="image.png"/>
-  <link rel="stylesheet" href="style.css">
- <style>
-.workspace{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;margin:16px auto}
-@media (max-width:1100px){.workspace{grid-template-columns:1fr}}
-.panel{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 4px 14px rgba(9,30,66,.05)}
-.panel .inner{padding:14px}
-.chat-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
-.title{font-weight:800}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{display:inline-flex;align-items:center;gap:6px;background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:6px 10px;font-weight:700;color:#18315a;cursor:pointer}
-.chip:hover{box-shadow:var(--shadow)}
-.chat-scroll{height:58vh;min-height:360px;overflow:auto;padding:14px;scroll-behavior:smooth}
-.msg{display:flex;gap:10px;margin:10px 0}
-.bubble{max-width:72ch;padding:10px 12px;border-radius:12px;border:1px solid var(--line)}
-.from-user .bubble{background:#e9f1ff;border-color:#d9e7ff}
-.from-ai .bubble{background:#fff}
-.avatar-sm{width:28px;height:28px;border-radius:999px;border:1px solid var(--line);object-fit:cover}
-.meta{font-size:12px;color:var(--muted);margin-bottom:4px}
-.compose{display:flex;align-items:center;gap:8px;padding:10px;border-top:1px solid var(--line)}
-.textrow{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px 8px;flex:1}
-.textarea{flex:1;min-height:42px;max-height:120px;padding:6px 8px;border:0;outline:0;resize:vertical}
-.toolbtn{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer}
-.toolbtn:hover{box-shadow:var(--shadow)}
-.send{height:38px;padding:0 16px;border-radius:10px;border:1px solid var(--line);background:var(--primary);color:#fff;font-weight:800}
-.dropzone{position:absolute;inset:0;background:rgba(22,119,255,.06);border:2px dashed var(--primary);display:none;place-items:center;font-weight:800;color:#17408b;z-index:20}
-.right-head{display:flex;align-items:center;gap:10px;padding:14px;border-bottom:1px solid var(--line)}
-.avatar-lg{width:64px;height:64px;border-radius:999px;border:2px solid var(--line);object-fit:cover}
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Engini - Chat Workspace</title>
+    <link rel="icon" type="image/png" href="image.png"/>
+    <link rel="stylesheet" href="style.css">
+    <style>
 
-.section-title{font-weight:800;margin:8px 0}
-.badges{display:flex;flex-wrap:wrap;gap:6px}
-.badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:4px 8px;background:#fafcff;font-weight:700}
-.list{margin:0;padding-left:18px}
-.list li{margin:4px 0}
-.backdrop{position:fixed;inset:0;background:rgba(9,22,36,.45);display:none;z-index:120}
-.backdrop.show{display:block}
-.drawer{position:fixed;top:0;right:-460px;width:440px;height:100%;background:#fff;border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(9,30,66,.15);transition:right .25s ease;z-index:130;display:flex;flex-direction:column}
-.drawer.show{right:0}
-.drawer header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line)}
-.drawer main{padding:12px 14px;overflow:auto}
-.tabs{display:flex;gap:6px;flex-wrap:wrap}
-.tab{height:30px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:#fff;cursor:pointer}
-.tab.active{background:var(--primary);border-color:var(--primary);color:#fff}
-.field{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px}
-.row{display:flex;gap:8px}
-.row-between{display:flex;align-items:center;justify-content:space-between}
-.help{font-size:12px;color:var(--muted)}
-.hr{border:none;border-top:1px solid var(--line);margin:12px 0}
-</style>
+        .workspace {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 360px;
+            gap: 16px;
+            margin: 16px auto;
+        }
+        @media (max-width: 1100px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+        .panel {
+            background: var(--card, #fff); 
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            box-shadow: 0 4px 14px rgba(9, 30, 66, .05);
+        }
+        .panel .inner {
+            padding: 14px
+        }
+        .chat-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--line)
+        }
+        .title {
+            font-weight: 600; 
+        }
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px
+        }
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--chip);
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 6px 10px;
+            font-weight: 500; 
+            color: var(--chip-ink);
+            cursor: pointer
+        }
+        .chip:hover {
+            box-shadow: var(--shadow-sm, 0 2px 8px rgba(0,0,0,.08))
+        }
+        .chat-scroll {
+            height: 58vh;
+            min-height: 360px;
+            overflow: auto;
+            padding: 14px;
+            scroll-behavior: smooth
+        }
+        .msg {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0
+        }
+        .bubble {
+            max-width: 72ch;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            color: var(--ink); 
+        }
+        .from-user .bubble {
+            background: var(--chip, #e9f1ff);
+            border-color: var(--line-strong, #d9e7ff);
+        }
+        .from-ai .bubble {
+            background: var(--card, #fff);
+        }
+        .avatar-sm {
+            width: 28px;
+            height: 28px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            object-fit: cover
+        }
+        .meta {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 4px
+        }
+        .compose {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            border-top: 1px solid var(--line)
+        }
+        .textrow {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card, #fff);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 6px 8px;
+            flex: 1
+        }
+        .textarea {
+            flex: 1;
+            min-height: 42px;
+            max-height: 120px;
+            padding: 6px 8px;
+            border: 0;
+            outline: 0;
+            resize: vertical;
+            background: transparent;
+            color: var(--ink);
+        }
+        .toolbtn {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            border: 1px solid var(--line);
+            background: var(--card, #fff);
+            cursor: pointer
+        }
+        .toolbtn:hover {
+            box-shadow: var(--shadow-sm)
+        }
+        .send {
+            height: 38px;
+            padding: 0 16px;
+            border-radius: 10px;
+            border: 1px solid var(--line);
+            background: var(--primary);
+            color: var(--primary-ink, #fff);
+            font-weight: 600; 
+        }
+        .dropzone {
+            position: absolute;
+            inset: 0;
+            background: rgba(22, 119, 255, .06);
+            border: 2px dashed var(--primary);
+            display: none;
+            place-items: center;
+            font-weight: 600;
+            color: #17408b;
+            z-index: 20
+        }
+        .right-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px;
+            border-bottom: 1px solid var(--line)
+        }
+        .avatar-lg {
+            width: 64px;
+            height: 64px;
+            border-radius: 999px;
+            border: 2px solid var(--line);
+            object-fit: cover
+        }
+
+        .section-title {
+            font-weight: 600; 
+            margin: 8px 0
+        }
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 4px 8px;
+            background: var(--chip);
+            font-weight: 500; 
+            color: var(--ink);
+        }
+        .list {
+            margin: 0;
+            padding-left: 18px
+        }
+        .list li {
+            margin: 4px 0;
+            color: var(--ink);
+        }
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(9, 22, 36, .45);
+            display: none;
+            z-index: 120
+        }
+        .drawer {
+            position: fixed;
+            top: 0;
+            right: -460px;
+            width: 440px;
+            height: 100%;
+            background: var(--card, #fff);
+            border-left: 1px solid var(--line);
+            box-shadow: -8px 0 24px rgba(9, 30, 66, .15);
+            transition: right .25s ease;
+            z-index: 130;
+            display: flex;
+            flex-direction: column
+        }
+        .drawer header {
+            font-weight: 600; 
+        }
+        .hr {
+            border: none;
+            border-top: 1px solid var(--line);
+            margin: 12px 0
+        }
+
+        html.dark-mode .panel { background: var(--card); }
+        html.dark-mode .from-user .bubble { 
+            background: rgba(59, 130, 246, 0.2); 
+            border-color: rgba(59, 130, 246, 0.4);
+            color: var(--ink); 
+        }
+        html.dark-mode .from-ai .bubble { 
+            background: var(--card); 
+            border-color: var(--line);
+            color: var(--ink);
+        }
+        html.dark-mode .compose .textrow {
+            background: var(--card); 
+            border-color: var(--line);
+        }
+        html.dark-mode .textarea {
+            background: transparent; 
+            color: var(--ink); 
+        }
+        html.dark-mode .toolbtn {
+            background: var(--card);
+            border-color: var(--line);
+        }
+        html.dark-mode .send {
+            background: var(--primary);
+            color: var(--primary-ink); 
+            border-color: var(--primary);
+        }
+        html.dark-mode .chip, html.dark-mode .badge {
+            background: var(--chip);
+            color: var(--ink);
+            border-color: var(--line);
+        }
+
+        .header-inner {
+            display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 64px; gap: 12px;
+        }
+        .brand { font-weight: 500; } 
+        .progress { font-weight: 500; } 
+        .progress .active { font-weight: 600; }
+        .header-actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+        .header-actions .btn { font-weight: 600; }
+
+        .modal-backdrop {position:fixed;inset:0;background:var(--backdrop);display:none;align-items:center;justify-content:center;z-index:120}
+        .modal-backdrop.show{display:flex}
+        .modal{width:min(760px,94vw);background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 24px 60px rgba(0,0,0,.18);overflow:hidden;color:var(--ink)}
+        .modal header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line)}
+        .modal .h3{font-weight:600;}
+        .modal .scroll{max-height:62vh;overflow:auto;padding:14px}
+        .modal .close{background:transparent;border:0;font-size:20px;cursor:pointer;color:var(--ink)}
+        .modal .field{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+        .modal .ok { background: var(--primary); color: var(--primary-ink); border: 1px solid var(--primary); height: 38px; border-radius: 10px; padding: 0 14px; font-weight: 700; }
+        .modal .row { display: flex; gap: 10px; }
+        .modal .row-between{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-top:1px solid var(--line)}
+    </style>
 </head>
 <body>
- <header class="header">
-  <div class="header-inner container">
-    <div class="brand">
-      <img src="logo.png" alt="Engini logo">
-      
-    </div>
-<div class="progress" aria-label="progress">
-<span data-step="1"><span class="dot"></span> Select Worker</span>
-<span>›</span>
-<span data-step="2"><span class="dot"></span> Select Skills</span>
-<span>›</span>
-<span data-step="3"><span class="dot"></span> Onboard</span>
-<span>›</span>
-<span data-step="4" class="active"><span class="dot"></span> Chat Workspace</span>
-</div>
+    <header class="header">
+        <div class="header-inner container">
+            <div class="brand">
+                <img id="brandLogo" src="logo.png" alt="Engini logo">
+            </div>
+            <div class="progress" aria-label="progress">
+                <span data-step="1"><span class="dot"></span> Select Worker</span>
+                <span>›</span>
+                <span data-step="2"><span class="dot"></span> Select Skills</span>
+                <span>›</span>
+                <span data-step="3"><span class="dot"></span> Onboard</span>
+                <span>›</span>
+                <span data-step="4" class="active"><span class="dot"></span> Chat Workspace</span>
+            </div>
 
-    <div class="hstack">
-
-      <button class="btn" id="talkSales">Talk to Sales</button>
-    </div>
-  </div>
-</header>
-
-  <div class="container workspace">
-    <section class="panel" id="chatPanel">
-      <div class="chat-head">
-        <div>
-          <div class="title" id="chatTitle">Chat with Worker</div>
-          <div class="muted" id="chatSubtitle">Demo Mode — connect systems to go live</div>
+            <div class="header-actions">
+                <button class="cta-sales" id="btnTalkSales" type="button">Talk to Sales</button>
+                <button class="btn" id="themeToggle" type="button">Dark mode</button>
+            </div>
         </div>
-        <div class="hstack">
-          <button id="btnConnect" class="btn">Connect systems</button>
-          <button id="btnClear" class="btn ghost">Clear</button>
-        </div>
-      </div>
-      <div class="inner">
-        <div id="starter" class="chips" style="margin-bottom:8px"></div>
-      </div>
-      <div id="dropzone" class="dropzone">Drop files to upload</div>
-      <div id="chatScroll" class="chat-scroll"></div>
-      <div class="compose">
-        <div class="textrow">
-          <button id="btnAttach" class="toolbtn" title="Attach file">📎</button>
-          <input id="fileInput" type="file" hidden multiple/>
-          <textarea id="input" class="textarea" placeholder="Type a message to your worker…"></textarea>
-          <button id="btnMic" class="toolbtn" title="Voice input">🎤</button>
-        </div>
-        <button id="btnSend" class="send">Send</button>
-      </div>
-    </section>
-
-    <aside class="panel">
-      <div class="right-head">
-        <img id="avatar" class="avatar-lg" src="" alt="avatar"/>
-        <div>
-          <div style="font-weight:800" id="workerName">AI Worker</div>
-          <div class="muted"><span class="dot"></span> Available</div>
-        </div>
-      </div>
-      <div class="inner">
-        <div class="section-title">Selected Skills</div>
-        <div class="badges" id="skillsBadges" style="margin-bottom:6px"></div>
-        <div class="scroll" style="max-height:180px;overflow:auto">
-          <ul id="skillsList" class="list"></ul>
-        </div>
-
-        <hr class="hr">
-        <div class="section-title">Connections</div>
-        <div class="badges" id="connBadges"></div>
-        <div class="help">Use “Connect systems” to add ERP/CRM/HRIS/ITSM/DB/Files. Saved in browser for demo.</div>
-
-        <hr class="hr">
-        <a class="btn" href="skills.html" style="width:100%">Manage Skills</a>
-      </div>
-    </aside>
-  </div>
-
-  <div id="drawerBackdrop" class="backdrop"></div>
-  <aside id="drawer" class="drawer" aria-label="Connect systems">
-    <header>
-      <div style="font-weight:800">Connect systems</div>
-      <button class="btn" onclick="closeDrawer()">Close</button>
     </header>
-    <main>
-      <div class="tabs" id="tabs"></div>
-      <hr class="hr">
-      <div id="tabBody"></div>
-    </main>
-  </aside>
 
-  <script>
+    <div class="container workspace">
+        <section class="panel" id="chatPanel">
+            <div class="chat-head">
+                <div>
+                    <div class="title" id="chatTitle">Chat with Worker</div>
+                    <div class="muted" id="chatSubtitle">Demo Mode — connect systems to go live</div>
+                </div>
+                <div class="header-actions">
+                    <button id="btnConnect" class="btn">Connect systems</button>
+                    <button id="btnClear" class="btn ghost">Clear</button>
+                </div>
+            </div>
+            <div class="inner">
+                <div id="starter" class="chips" style="margin-bottom:8px"></div>
+            </div>
+            <div id="dropzone" class="dropzone">Drop files to upload</div>
+            <div id="chatScroll" class="chat-scroll"></div>
+            <div class="compose">
+                <div class="textrow">
+                    <button id="btnAttach" class="toolbtn" title="Attach file">📎</button>
+                    <input id="fileInput" type="file" hidden multiple/>
+                    <textarea id="input" class="textarea" placeholder="Type a message to your worker…"></textarea>
+                    <button id="btnMic" class="toolbtn" title="Voice input">🎤</button>
+                </div>
+                <button id="btnSend" class="send">Send</button>
+            </div>
+        </section>
+
+        <aside class="panel">
+            <div class="right-head">
+                <img id="avatar" class="avatar-lg" src="" alt="avatar"/>
+                <div>
+                    <div id="workerName">AI Worker</div>
+                    <div class="muted"><span class="dot"></span> Available</div>
+                </div>
+            </div>
+            <div class="inner">
+                <div class="section-title">Selected Skills</div>
+                <div class="badges" id="skillsBadges" style="margin-bottom:6px"></div>
+                <div class="scroll" style="max-height:180px;overflow:auto">
+                    <ul id="skillsList" class="list"></ul>
+                </div>
+
+                <hr class="hr">
+                <div class="section-title">Connections</div>
+                <div class="badges" id="connBadges"></div>
+                <div class="help">Use “Connect systems” to add ERP/CRM/HRIS/ITSM/DB/Files. Saved in browser for demo.</div>
+
+                <hr class="hr">
+                <a class="btn" href="skills.html" style="width:100%">Manage Skills</a>
+            </div>
+        </aside>
+    </div>
+
+    <div id="drawerBackdrop" class="backdrop" onclick="closeDrawer()"></div>
+    <aside id="drawer" class="drawer" aria-label="Connect systems">
+        <header>
+            <div>Connect systems</div>
+            <button class="btn" onclick="closeDrawer()">Close</button>
+        </header>
+        <main>
+            <div class="tabs" id="tabs"></div>
+            <hr class="hr">
+            <div id="tabBody"></div>
+        </main>
+    </aside>
+
+    <div id="salesModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="salesTitle">
+        <div class="modal" onclick="event.stopPropagation()">
+            <header>
+                <div id="salesTitle" class="h3">Talk to Sales</div>
+                <button class="close" onclick="closeModal('salesModal')">×</button>
+            </header>
+            <div class="scroll">
+                <div class="row" style="margin-bottom:10px">
+                    <input class="field" placeholder="Name">
+                    <input class="field" placeholder="Email">
+                </div>
+                <div class="row" style="margin-bottom:10px">
+                    <input class="field" placeholder="Company">
+                    <input class="field" placeholder="Phone">
+                </div>
+                <textarea class="field" placeholder="Tell us about your needs"></textarea>
+            </div>
+            <div class="row-between">
+                <span class="muted">We’ll get back to you shortly.</span>
+                <button class="ok" onclick="closeModal('salesModal')">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+      
+        const LS = {
+            WORKER: 'engini.selectedWorker',
+            SKILLS: 'engini.selectedSkills',
+            CONN: 'engini.connections',
+            CHAT_PREFIX: 'engini.chat.'
+        };
+        const STEP_URLS = { 1: 'index.html', 2: 'skills.html', 3: 'onboard.html', 4: 'chat.html' };
+
+        const getLS = (k, f = null) => { try { return JSON.parse(localStorage.getItem(k) || JSON.stringify(f)); } catch { return f; } };
+        const setLS = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+        const uiAvatar = (name) => `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'AI')}&background=E6EEF8&color=1B2A4A`;
+        
+        const openModal = (id) => document.getElementById(id).classList.add('show');
+        const closeModal = (id) => document.getElementById(id).classList.remove('show');
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        
+        const selWorker = getLS(LS.WORKER, { id: 'default', name: 'AI Worker' });
+        const selSkills = getLS(LS.SKILLS, []);
+        const chatKey = LS.CHAT_PREFIX + (selWorker.id || 'default');
+        let chat = getLS(chatKey, []);
+
+        const drawer = document.getElementById('drawer');
+        const drawerBackdrop = document.getElementById('drawerBackdrop');
+        const openDrawer = () => { drawer.classList.add('show'); drawerBackdrop.classList.add('show'); };
+        const closeDrawer = () => { drawer.classList.remove('show'); drawerBackdrop.classList.remove('show'); };
+        
+        window.closeDrawer = closeDrawer;
+
+        const setActiveProgress = () => {
+            const path = (location.pathname || '').toLowerCase();
+            let step = 1;
+            if (path.includes('skills')) step = 2;
+            else if (path.includes('onboard')) step = 3;
+            else if (path.includes('chat')) step = 4;
+
+            document.querySelectorAll('.progress [data-step]').forEach(el => {
+                el.classList.toggle('active', Number(el.dataset.step) === step);
+            });
+        };
+
+        const wireProgressNav = () => {
+            document.querySelectorAll('.progress [data-step]').forEach(el => {
+                el.addEventListener('click', () => {
+                    const step = Number(el.dataset.step);
+                    window.location.href = STEP_URLS[step] || 'index.html';
+                });
+            });
+        };
+
+
+        const scrollEl = document.getElementById('chatScroll');
+        const renderChat = () => {
+            scrollEl.innerHTML = chat.map(m => {
+                const mine = m.role === 'user';
+                const senderAvatar = mine ? '<div style="width:28px"></div>' : `<img class="avatar-sm" src="${document.getElementById('avatar').src}" alt="ai"/>`;
+                const senderName = mine ? 'You' : selWorker.name;
+                const time = new Date(m.ts).toLocaleTimeString();
+
+                return `<div class="msg ${mine ? 'from-user' : 'from-ai'}">
+                            ${senderAvatar}
+                            <div>
+                                <div class="meta">${senderName} • ${time}</div>
+                                <div class="bubble">${m.content}</div>
+                            </div>
+                        </div>`;
+            }).join('');
+            scrollEl.scrollTop = scrollEl.scrollHeight;
+            setLS(chatKey, chat);
+        };
+
    
-    /* ========= Local Storage ========= */
-    const LS = {
-      WORKER:'engini.selectedWorker',
-      SKILLS:'engini.selectedSkills',
-      CONN:'engini.connections',
-      CHAT_PREFIX:'engini.chat.'
-    };
-    const getLS=(k,f=null)=>{try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(f));}catch{return f;}}
-    const setLS=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+        const input = document.getElementById('input');
+        const btnSend = document.getElementById('btnSend');
 
-    const selWorker = getLS(LS.WORKER, {id:'custom', name:'Sarah'});
-    const selSkills = getLS(LS.SKILLS, []);
-    const chatKey = LS.CHAT_PREFIX + (selWorker?.id || 'default');
-    let chat = getLS(chatKey, []);
+        async function reply(userText) {
+            try {
+                const res = await fetch("http://localhost:3000/api/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ prompt: userText })
+                });
 
-   
-const STEP_URLS = { 1:'index.html', 2:'skills.html', 3:'onboard.html', 4:'chat.html' };
+                if (!res.ok) throw new Error(await res.text());
+                const data = await res.json();
 
+                const text = data?.candidates?.[0]?.content?.parts?.map(p => p.text).join("\n") || "Okay.";
+                
+                chat.push({ role: "assistant", content: text, ts: Date.now() });
+                renderChat();
+            } catch (err) {
+                console.error("Proxy error:", err);
+                chat.push({ role: "assistant", content: "⚠️ Proxy call failed. Check console logs.", ts: Date.now() });
+                renderChat();
+            }
+        }
 
-function setActiveProgressByPath() {
-  const path = (location.pathname || '').toLowerCase();
-  let step = 1;
-  if (path.includes('skills')) step = 2;
-  else if (path.includes('onboard')) step = 3;
-  else if (path.includes('workspace') || path.includes('chat')) step = 4;
+        const sendMessage = async (text) => {
+            chat.push({ role: 'user', content: text, ts: Date.now() });
+            renderChat();
+            input.value = '';
+            await reply(text);
+        };
+        
+        btnSend.onclick = () => { if (input.value.trim()) sendMessage(input.value.trim()); };
+        input.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); btnSend.click(); } });
 
-  document.querySelectorAll('.progress [data-step]').forEach(el => {
-    el.classList.toggle('active', Number(el.dataset.step) === step);
-  });
-}
+     
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        const brandLogo = document.querySelector('.brand img');
 
+        const updateLogo = (isDark) => {
+            brandLogo.src = isDark ? 'logo_light.png' : 'logo.png';
+        };
 
+        const setInitialTheme = () => {
+            const isDarkInitial = localStorage.getItem('theme') === 'dark';
+            if (isDarkInitial) {
+                html.classList.add('dark-mode');
+                if (themeToggle) themeToggle.textContent = 'Light Mode';
+            } else {
+                if (themeToggle) themeToggle.textContent = 'Dark mode';
+            }
+            if (brandLogo) updateLogo(isDarkInitial);
+        };
 
-function wireProgressNav(){
-document.querySelectorAll('.progress [data-step]').forEach(el=>{
-el.addEventListener('click', ()=>{
-const step = Number(el.dataset.step);
-const url = STEP_URLS[step] || 'index.html';
-window.location.href = url;
-});
-});
-}
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                html.classList.toggle('dark-mode');
+                const isDark = html.classList.contains('dark-mode');
+                
+                themeToggle.textContent = isDark ? 'Light Mode' : 'Dark mode';
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                
+                if (brandLogo) updateLogo(isDark);
+            });
+        }
+        
+     
 
+        document.addEventListener('DOMContentLoaded', () => {
+       
+            document.getElementById('workerName').textContent = selWorker.name;
+            const avatarEl = document.getElementById('avatar');
+            avatarEl.src = uiAvatar(selWorker.name);
 
-(function init(){
-setActiveProgressByPath();
-wireProgressNav();
-})();
-    /* ========= UI Setup ========= */
-    document.getElementById('workerName').textContent = selWorker?.name || 'AI Worker';
-    const avatar = document.getElementById('avatar');
-    avatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(selWorker?.name)}&background=E6EEF8&color=1B2A4A`;
+          
+            document.getElementById('skillsBadges').innerHTML = selSkills.map(s => `<span class="badge">${s}</span>`).join('');
+            document.getElementById('skillsList').innerHTML = selSkills.map(s => `<li>${s}</li>`).join('');
 
-    const skillsBadges = document.getElementById('skillsBadges');
-    const skillsList = document.getElementById('skillsList');
-    skillsBadges.innerHTML = selSkills.map(s=>`<span class="badge">${s}</span>`).join('');
-    skillsList.innerHTML = selSkills.map(s=>`<li>${s}</li>`).join('');
+       
+            if (!chat.length) {
+                chat.push({ role: 'assistant', content: `Hi, I’m **${selWorker.name}**. Ask me anything!`, ts: Date.now() });
+            }
+            renderChat();
 
-    /* ========= Chat ========= */
-    const scrollEl = document.getElementById('chatScroll');
-    function renderChat(){
-      scrollEl.innerHTML = chat.map(m=>{
-        const mine = m.role==='user';
-        return `<div class="msg ${mine?'from-user':'from-ai'}">
-          ${!mine?`<img class="avatar-sm" src="${avatar.src}" alt="ai"/>`:'<div style="width:28px"></div>'}
-          <div>
-            <div class="meta">${mine?'You':selWorker.name} • ${new Date(m.ts).toLocaleTimeString()}</div>
-            <div class="bubble">${m.content}</div>
-          </div></div>`;
-      }).join('');
-      scrollEl.scrollTop = scrollEl.scrollHeight;
-      setLS(chatKey, chat);
-    }
-    renderChat();
+      
+            document.getElementById('btnClear').onclick = () => {
+                chat = [];
+                chat.push({ role: 'assistant', content: `Chat cleared. Hi, I’m **${selWorker.name}** again!`, ts: Date.now() });
+                renderChat();
+            };
 
-    const input = document.getElementById('input');
-    document.getElementById('btnSend').onclick = ()=>{ if(input.value.trim()) sendMessage(input.value.trim()); };
-    input.addEventListener('keydown', e=>{ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();document.getElementById('btnSend').click();}});
+            setInitialTheme();
+            setActiveProgress();
+            wireProgressNav();
+            
 
-    async function sendMessage(text){
-      chat.push({role:'user',content:text,ts:Date.now()});
-      renderChat();
-      input.value='';
-      await reply(text);
-    }
-async function reply(userText) {
-  try {
-const res = await fetch("http://localhost:3000/api/chat", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ prompt: userText })
-});
-
-
-    if (!res.ok) throw new Error(await res.text());
-    const data = await res.json();
-
-    const text =
-      data?.candidates?.[0]?.content?.parts?.map(p => p.text).join("\n") ||
-      "Okay.";
-
-    chat.push({ role: "assistant", content: text, ts: Date.now() });
-    renderChat();
-  } catch (err) {
-    console.error("Proxy error:", err);
-    chat.push({
-      role: "assistant",
-      content: "⚠️ Proxy call failed. Check console logs.",
-      ts: Date.now()
-    });
-    renderChat();
-  }
-}
-
-
-
-    if(!chat.length){
-      chat.push({role:'assistant',content:`Hi, I’m **${selWorker.name}**. Ask me anything!`,ts:Date.now()});
-      renderChat();
-    }
-
-
-
-
-    
-  </script>
+            document.getElementById('btnTalkSales').onclick = () => openModal('salesModal');
+        });
+    </script>
 </body>
 </html>

@@ -1,789 +1,630 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Engini - Choose your AI Worker</title>
-  <link rel="icon" type="image/png" href="image.png"/>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Engini - Choose your AI Worker</title>
+    <link rel="icon" type="image/png" href="image.png"/>
+    <link rel="stylesheet" href="style.css">
+    <style>
+
+        .header .brand {
+            font-weight: 500; 
+        }
+        .header .progress {
+            font-weight: 500; 
+                }
+        .header .progress .active {
+             font-weight: 600; 
+        }
+        .btn,.cta-sales{
+            height:36px;padding:0 14px;border-radius:10px;
+            border:1px solid var(--line);background:var(--card);color:var(--ink);
+            font-weight:600; 
+            cursor:pointer;transition:box-shadow .2s,border-color .2s,background .2s
+        }
+
+        .actions {
+            margin-top: auto;
+            display: contents;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .used-by {
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+        }
+        .wc-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            min-height: 680px;
+            padding: 16px;
+            background: var(--glass);
+            border-radius: 12px;
+        }
+        .card-body > *:last-child {
+            margin-bottom: auto;
+        }
+        .roi-section {
+            min-height: 110px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            margin-top: auto;
+        }
+        .viewroi {
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            font-weight: 600; 
+            font-size: 13.5px;
+            color: var(--primary);
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+    </style>
 </head>
-<style>
-  /* Card structure as flexbox column */
-.wc-card {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Pushes content above the bottom buttons */
-.card-body {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Make ROI and action buttons aligned and consistent */
-.wc-card .btn[data-roi-toggle] {
-  min-height: 38px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  text-align: center;
-  margin-top: 6px;
-  white-space: normal;
-}
-
-.actions {
-  margin-top: auto;
-  display: contents;
-  flex-direction: column;
-  gap: 8px;
-}
-.actions .btn.primary.wide {
-  min-height: 38px;
-  width: 100%;
-  font-weight: 700;
-}
-
-.used-by {
-  text-align: center;
-  color: var(--muted);
-  font-size: 12px;
-}
-.wc-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  min-height: 680px; /* You can adjust this as needed */
-  padding: 16px;
-  background: var(--glass);
-  border-radius: 12px;
-}
-
-.card-body > *:last-child {
-  margin-bottom: auto;
-}
-.roi-section {
-  min-height: 110px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  margin-top: auto;
-}
-
-.viewroi {
-  height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  font-weight: 700;
-  font-size: 13.5px;
-  color: var(--primary);
-  background: white;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.viewroi:hover {
-  background: #f0f5ff;
-  border-color: var(--primary);
-}
-
-.viewroi.placeholder {
-  color: var(--muted);
-  font-style: italic;
-  border-style: dashed;
-  cursor: default;
-}
-
-.apps-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  justify-content: center;
-  align-items: center;
-  min-height: 46px; /* ensures same height across all cards */
-  margin-top: 12px;
-  margin-bottom: 8px;
-}
-
-.app-icon {
-  height: 20px;
-  max-width: 28px;
-  object-fit: contain;
-  filter: grayscale(0.4);
-  opacity: 0.85;
-  transition: all 0.2s ease;
-}
-
-.app-icon:hover {
-  filter: none;
-  opacity: 1;
-}
-.wc-top {
-  min-height: 96px; /* experiment with 96–120px */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-</style>
 <body>
-  <!-- Header -->
-  <header class="header">
-    <div class="header-inner container">
-      <div class="brand">
-        <img src="logo.png" alt="Engini logo">
-      </div>
-      <div class="progress" aria-label="progress">
-        <span data-step="1" class="active"><span class="dot"></span> Select Worker</span>
-        <span>›</span>
-        <span data-step="2"><span class="dot"></span> Select Skills</span>
-        <span>›</span>
-        <span data-step="3"><span class="dot"></span> Onboard</span>
-        <span>›</span>
-        <span data-step="4"><span class="dot"></span> Chat Workspace</span>
-      </div>
-      <button class="cta-sales" id="btnTalkSales">Talk to Sales</button>
-    </div>
-  </header>
+    <header class="header">
+        <div class="header-inner container">
+            <div class="brand">
+                <img id="brandLogo" src="logo.png" alt="Engini logo">
+            </div>
 
-  <!-- Modal: Talk to Sales -->
-  <div id="salesModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="salesTitle">
-    <div class="modal" onclick="event.stopPropagation()">
-      <header>
-        <div id="salesTitle" class="h3">Talk to Sales</div>
-        <button class="close" onclick="closeModal('salesModal')">×</button>
-      </header>
-      <div class="scroll">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <input class="field" placeholder="Name">
-          <input class="field" placeholder="Email">
-          <input class="field" placeholder="Company">
-          <input class="field" placeholder="Phone">
+            <div class="progress" aria-label="progress">
+                <span data-step="1" class="active"><span class="dot"></span> Select Worker</span>
+                <span>›</span>
+                <span data-step="2"><span class="dot"></span> Select Skills</span>
+                <span>›</span>
+                <span data-step="3"><span class="dot"></span> Onboard</span>
+                <span>›</span>
+                <span data-step="4"><span class="dot"></span> Chat Workspace</span>
+            </div>
+
+            <div class="header-actions">
+                <button class="cta-sales" id="btnTalkSales" type="button">Talk to Sales</button>
+                <button class="btn" id="themeToggle" type="button">Dark mode</button>
+            </div>
         </div>
-        <textarea class="field" style="margin-top:10px;height:120px" placeholder="Tell us about your needs"></textarea>
-      </div>
-      <div class="row-between">
-        <span class="muted">We’ll get back to you shortly.</span>
-        <button class="btn primary" onclick="closeModal('salesModal')">Send</button>
-      </div>
-    </div>
-  </div>
+    </header>
 
-  <!-- Modal: Apps Picker -->
-  <div id="appsModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="appsTitle">
-    <div class="modal" onclick="event.stopPropagation()">
-      <header>
-        <div id="appsTitle" class="h3">Add Apps</div>
-        <button class="close" onclick="closeModal('appsModal')">×</button>
-      </header>
-      <div class="scroll">
-        <input id="appsSearch" class="search" placeholder="Search apps… (e.g., salesforce, zendesk, okta)"/>
-        <div id="appsGrid" class="apps-grid" style="margin-top:12px"></div>
-      </div>
-      <div class="row-between">
-        <span id="appsSelectionNote" class="muted">0 selected</span>
-        <div style="display:flex;gap:8px">
-          <button class="btn" onclick="closeModal('appsModal')">Cancel</button>
-          <button id="appsAddBtn" class="btn primary">Add Selected</button>
+    <div id="salesModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="salesTitle">
+        <div class="modal" onclick="event.stopPropagation()">
+            <header>
+                <div id="salesTitle" class="h3">Talk to Sales</div>
+                <button class="close" onclick="closeModal('salesModal')">×</button>
+            </header>
+            <div class="scroll">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                    <input class="field" placeholder="Name">
+                    <input class="field" placeholder="Email">
+                    <input class="field" placeholder="Company">
+                    <input class="field" placeholder="Phone">
+                </div>
+                <textarea class="field" style="margin-top:10px;height:120px" placeholder="Tell us about your needs"></textarea>
+            </div>
+            <div class="row-between">
+                <span class="muted">We’ll get back to you shortly.</span>
+                <button class="btn primary" onclick="closeModal('salesModal')">Send</button>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 
-  <!-- Modal: Custom Worker -->
-  <div id="customModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="customTitle">
-    <div class="modal" onclick="event.stopPropagation()">
-      <header>
-        <div id="customTitle" class="h3">Create Your Custom Worker</div>
-        <button class="close" onclick="closeModal('customModal')">×</button>
-      </header>
-      <div class="scroll">
-        <div style="display:grid;grid-template-columns:1fr;gap:10px">
-          <input id="cwName" class="field" placeholder="Worker name (e.g., Procurement Copilot)"/>
-          <input id="cwDesc" class="field" placeholder="Short description (optional)"/>
+    <div id="appsModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="appsTitle">
+        <div class="modal" onclick="event.stopPropagation()">
+            <header>
+                <div id="appsTitle" class="h3">Add Apps</div>
+                <button class="close" onclick="closeModal('appsModal')">×</button>
+            </header>
+            <div class="scroll">
+                <input id="appsSearch" class="search" placeholder="Search apps… (e.g., salesforce, zendesk, okta)"/>
+                <div id="appsGrid" class="apps-grid" style="margin-top:12px"></div>
+            </div>
+            <div class="row-between">
+                <span id="appsSelectionNote" class="muted">0 selected</span>
+                <div style="display:flex;gap:8px">
+                    <button class="btn" onclick="closeModal('appsModal')">Cancel</button>
+                    <button id="appsAddBtn" class="btn primary">Add Selected</button>
+                </div>
+            </div>
         </div>
-        <p class="muted" style="margin-top:10px">You can add skills on the next step and choose apps anytime.</p>
-      </div>
-      <div class="row-between">
-        <span class="muted">We’ll start with an empty skill set.</span>
-        <div style="display:flex;gap:8px">
-          <button class="btn" onclick="closeModal('customModal')">Cancel</button>
-          <button id="cwCreate" class="btn primary">Create & Continue</button>
+    </div>
+
+    <div id="customModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="customTitle">
+        <div class="modal" onclick="event.stopPropagation()">
+            <header>
+                <div id="customTitle" class="h3">Create Your Custom Worker</div>
+                <button class="close" onclick="closeModal('customModal')">×</button>
+            </header>
+            <div class="scroll">
+                <div style="display:grid;grid-template-columns:1fr;gap:10px">
+                    <input id="cwName" class="field" placeholder="Worker name (e.g., Procurement Copilot)"/>
+                    <input id="cwDesc" class="field" placeholder="Short description (optional)"/>
+                </div>
+                <p class="muted" style="margin-top:10px">You can add skills on the next step and choose apps anytime.</p>
+            </div>
+            <div class="row-between">
+                <span class="muted">We’ll start with an empty skill set.</span>
+                <div style="display:flex;gap:8px">
+                    <button class="btn" onclick="closeModal('customModal')">Cancel</button>
+                    <button id="cwCreate" class="btn primary">Create & Continue</button>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 
-  <!-- Page Head -->
-  <main class="container" id="appRoot">
-    <h1 class="h1">Choose your AI Worker</h1>
-    <p class="lead muted">Select the AI Worker that best fits your team's needs. Each worker comes with specialized skills and proven ROI metrics.</p>
-    <div id="cards" class="cards"></div>
-    <div class="footer-continue">
-      <button id="btnContinue" class="btn primary" disabled>Continue</button>
+    <main class="container" id="appRoot">
+        <h1 class="h1">Choose your AI Worker</h1>
+        <p class="lead muted">Select the AI Worker that best fits your team's needs. Each worker comes with specialized skills and proven ROI metrics.</p>
+        <div id="cards" class="cards"></div>
+        <div class="footer-continue">
+            <button id="btnContinue" class="btn primary" disabled>Continue</button>
+        </div>
+    </main>
+    <div id="skillsModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="skillsTitle">
+        <div class="modal" onclick="event.stopPropagation()">
+            <header>
+                <div id="skillsTitle" class="h3">All Skills</div>
+                <button class="close" onclick="closeModal('skillsModal')">×</button>
+            </header>
+            <div id="skillsBody" class="scroll"></div>
+        </div>
     </div>
-  </main>
-  <!-- Modal: Skills viewer -->
-  <div id="skillsModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="skillsTitle">
-    <div class="modal" onclick="event.stopPropagation()">
-      <header>
-        <div id="skillsTitle" class="h3">All Skills</div>
-        <button class="close" onclick="closeModal('skillsModal')">×</button>
-      </header>
-      <div id="skillsBody" class="scroll"></div>
-    </div>
-  </div>
 
-  <script>
-    function roiSectionTemplate(w) {
-return `
-<div class="roi-section">
-<div class="wc-divider"></div>
-<div class="wc-badge">ROI</div>
-${w.roi?.length ? `
-<button class="btn viewroi" data-roi-toggle="${w.id}">View ROI</button>
-<div class="wc-roi">${w.roi.map(r => `<div class="kpi">${r}</div>`).join('')}</div>
-` : `
-<div class="viewroi placeholder">ROI not available</div>
-`}
-</div>
-`;
-}
-    // ---------- Data (apps use /icons/<key>.png) ----------
-   const WORKERS = [
-  {
-    id:'procurement', first:'Sarah – Procurement',
-    avatar:'sarah.png',
-    desc:'Handles invoice intake, PO matching and supplier management to speed up accounts payable and reduce errors.',
-    adoption:1842,
-    apps:['quickbooks','netsuite','slack'],
-    roi:['Invoice cycle time ↓35–55%','First-time match rate ↑20–35%'],
-    skills14:[
-      'Invoice capture (OCR/EDI)','Duplicate supplier/invoice detection','2/3-Way Match (Invoice ↔ PO ↔ GR)','PO & supplier validation',
-      'GL / cost center coding','Tax/VAT compliance checks','Exception flagging & routing','Payment proposal creation',
-      'Execute supplier payments','Vendor statement reconciliation','Contract renewal monitoring',
-      'Supplier performance tracking','Policy enforcement','Audit-ready AP reporting'
-    ]
-  },
-  {
-    id:'finance', first:'David – Finance',
-    avatar:'david.png',
-    desc:'Automates reconciliations, journal entries and reporting, helping finance teams close faster with higher accuracy.',
-    adoption:1376,
-    apps:['netsuite','sap','sage','quickbooks','xero','oracle'],
-    roi:['Month-end close time ↓20–30%','Reconciliation STP ↑60–80%'],
-    skills14:[
-      'Bank reconciliation','Recurring journal entries','Month-end data consolidation','Accruals & reclasses','AP/AR aging reports',
-      'Expense anomaly detection','Cash flow forecasting','Trial balance drafts','VAT/GST reporting','P&L by cost center',
-      'Payment batch scheduling','Payroll to GL integration','Variance analysis','DSO/DPO/OPEX KPI tracking'
-    ]
-  },
-  {
-    id:'hr', first:'Selina – HR',
-    avatar:'selina.png',
-    desc:'Manages onboarding, access provisioning and HR tickets to ensure smooth employee operations.',
-    adoption:1109,
-    apps:['workday','bamboo','hibob','ukg'],
-    roi:['Ticket deflection ↑30–50%','Onboarding time ↓40–60%'],
-    skills14:[
-      'New-hire onboarding (accounts/systems)','HRIS record creation','Access provisioning/deprovisioning','PTO/leave automation',
-      'Payslip/tax form generation','Compliance training reminders','HR ticket FAQ resolution','Performance review reminders',
-      'Training completion tracking','Org chart updates','Headcount & attrition reports','Benefits enrollment',
-      'Expense reimbursement processing','HR policy compliance checks'
-    ]
-  },
-  {
-    id:'it', first:'Max – IT',
-    avatar:'max.png',
-    desc:'Resolves common IT issues, triages incoming tickets and keeps systems updated and compliant.',
-    adoption:2204,
-    apps:['servicenow','jira','okta','intune','jamf'],
-    roi:['Auto-resolution ↑40–60%','MTTR ↓25–40%'],
-    skills14:[
-      'Auto-triage incoming tickets','Password resets','Account unlocks','Incident categorization/prioritization',
-      'Close duplicates/low-value tickets','Software package deployment','Security patching','User provisioning/deprovisioning',
-      'Intelligent ticket routing','SLA/MTTR KPI reporting','Asset inventory maintenance','Compliance/security scans',
-      'Weekly IT ops reports','Uptime/alert monitoring'
-    ]
-  },
-  
-  {
-    id:'aml', first:'Jacob – AML',
-    avatar:'jacob.png',
-    desc:'Conducts sanctions screening, KYC/KYB reviews and transaction monitoring to cut false positives and strengthen compliance.',
-    adoption:987,
-    apps:['sas','lseg','oracle','zip','basware'],
-    roi:['Alert auto-clearance ↑60–80%','False positives ↓50–70%'],
-    skills14:[
-      'Sanctions/PEP Alert Triage','False-positive suppression','Payments sanctions screening',
-      'AML transaction monitoring (L1 review)','KYC/KYB onboarding docs','Entity resolution & de-duplication',
-      'Watchlist/data enrichment','Adverse media monitoring','Case assembly & EDD pack',
-      'Risk scoring & KYC refresh','Narrative generation (GenAI)','SAR/STR drafting assist',
-      'Quality assurance & audit trail','Workload prioritization & SLA'
-    ]
-  },
-  {
-    id:'custom', first:'Custom Worker',
-    avatar:'custom.png',
-    desc:'Allows teams to design a tailor-made worker with custom skills, workflows and app integrations.',
-    adoption:null,
-    apps:[],
-    skills14:[]
-  }
-];
+    <script>
 
-    const AVAILABLE_APPS = [
-      'servicenow','okta','google','slack','microsoft','quickbooks','netsuite','jira','workday','salesforce',
-      'hubspot','zendesk','intercom','mailchimp','marketo','outreach','xero','bamboo','hibob','ukg',
-      'intune','jamf','coupa','tipalti','ariba','zip','basware','oracle','sap','lseg','sas','Monday-com'
-    ];
+        const WORKERS = [
+            {
+                id:'procurement', first:'Sarah – Procurement',
+                avatar:'sarah.png',
+                desc:'Handles invoice intake, PO matching and supplier management to speed up accounts payable and reduce errors.',
+                adoption:1842,
+                apps:['quickbooks','netsuite','slack'],
+                roi:['Invoice cycle time ↓35–55%','First-time match rate ↑20–35%'],
+                skills14:[
+                    'Invoice capture (OCR/EDI)','Duplicate supplier/invoice detection','2/3-Way Match (Invoice ↔ PO ↔ GR)','PO & supplier validation',
+                    'GL / cost center coding','Tax/VAT compliance checks','Exception flagging & routing','Payment proposal creation',
+                    'Execute supplier payments','Vendor statement reconciliation','Contract renewal monitoring',
+                    'Supplier performance tracking','Policy enforcement','Audit-ready AP reporting'
+                ]
+            },
+            {
+                id:'finance', first:'David – Finance',
+                avatar:'david.png',
+                desc:'Automates reconciliations, journal entries and reporting, helping finance teams close faster with higher accuracy.',
+                adoption:1376,
+                apps:['netsuite','sap','sage','quickbooks','xero','oracle'],
+                roi:['Month-end close time ↓20–30%','Reconciliation STP ↑60–80%'],
+                skills14:[
+                    'Bank reconciliation','Recurring journal entries','Month-end data consolidation','Accruals & reclasses','AP/AR aging reports',
+                    'Expense anomaly detection','Cash flow forecasting','Trial balance drafts','VAT/GST reporting','P&L by cost center',
+                    'Payment batch scheduling','Payroll to GL integration','Variance analysis','DSO/DPO/OPEX KPI tracking'
+                ]
+            },
+            {
+                id:'hr', first:'Selina – HR',
+                avatar:'selina.png',
+                desc:'Manages onboarding, access provisioning and HR tickets to ensure smooth employee operations.',
+                adoption:1109,
+                apps:['workday','bamboo','hibob','ukg'],
+                roi:['Ticket deflection ↑30–50%','Onboarding time ↓40–60%'],
+                skills14:[
+                    'New-hire onboarding (accounts/systems)','HRIS record creation','Access provisioning/deprovisioning','PTO/leave automation',
+                    'Payslip/tax form generation','Compliance training reminders','HR ticket FAQ resolution','Performance review reminders',
+                    'Training completion tracking','Org chart updates','Headcount & attrition reports','Benefits enrollment',
+                    'Expense reimbursement processing','HR policy compliance checks'
+                ]
+            },
+            {
+                id:'it', first:'Max – IT',
+                avatar:'max.png',
+                desc:'Resolves common IT issues, triages incoming tickets and keeps systems updated and compliant.',
+                adoption:2204,
+                apps:['servicenow','jira','okta','intune','jamf'],
+                roi:['Auto-resolution ↑40–60%','MTTR ↓25–40%'],
+                skills14:[
+                    'Auto-triage incoming tickets','Password resets','Account unlocks','Incident categorization/prioritization',
+                    'Close duplicates/low-value tickets','Software package deployment','Security patching','User provisioning/deprovisioning',
+                    'Intelligent ticket routing','SLA/MTTR KPI reporting','Asset inventory maintenance','Compliance/security scans',
+                    'Weekly IT ops reports','Uptime/alert monitoring'
+                ]
+            },
 
-    const LS = { WORKER:'engini.selectedWorker' };
-    const LS_APPS_PREFIX = 'engini.apps.'; // per-worker added apps
-    const STEP_URLS = { 1:'index.html', 2:'skills.html', 3:'onboard.html', 4:'chat.html' };
+            {
+                id:'aml', first:'Jacob – AML',
+                avatar:'jacob.png',
+                desc:'Conducts sanctions screening, KYC/KYB reviews and transaction monitoring to cut false positives and strengthen compliance.',
+                adoption:987,
+                apps:['sas','lseg','oracle','zip','basware'],
+                roi:['Alert auto-clearance ↑60–80%','False positives ↓50–70%'],
+                skills14:[
+                    'Sanctions/PEP Alert Triage','False-positive suppression','Payments sanctions screening',
+                    'AML transaction monitoring (L1 review)','KYC/KYB onboarding docs','Entity resolution & de-duplication',
+                    'Watchlist/data enrichment','Adverse media monitoring','Case assembly & EDD pack',
+                    'Risk scoring & KYC refresh','Narrative generation (GenAI)','SAR/STR drafting assist',
+                    'Quality assurance & audit trail','Workload prioritization & SLA'
+                ]
+            },
+            {
+                id:'custom', first:'Custom Worker',
+                avatar:'custom.png',
+                desc:'Allows teams to design a tailor-made worker with custom skills, workflows and app integrations.',
+                adoption:null,
+                apps:[],
+                skills14:[]
+            }
+        ];
 
-    const cardsRoot   = document.getElementById('cards');
-    const btnContinue = document.getElementById('btnContinue');
-    document.getElementById('btnTalkSales').onclick = () => openModal('salesModal');
+        const AVAILABLE_APPS = [
+            'servicenow','okta','google','slack','microsoft','quickbooks','netsuite','jira','workday','salesforce',
+            'hubspot','zendesk','intercom','mailchimp','marketo','outreach','xero','bamboo','hibob','ukg',
+            'intune','jamf','coupa','tipalti','ariba','zip','basware','oracle','sap','lseg','sas','Monday-com'
+        ];
 
-    function openModal(id){ document.getElementById(id).classList.add('show'); }
-    function closeModal(id){ document.getElementById(id).classList.remove('show'); }
-    function getSavedWorker(){ try{ return JSON.parse(localStorage.getItem(LS.WORKER)||'null'); }catch{return null;} }
-    function saveWorker(w){ localStorage.setItem(LS.WORKER, JSON.stringify(w)); }
+        const LS = { WORKER:'engini.selectedWorker' };
+        const LS_APPS_PREFIX = 'engini.apps.'; 
+        const STEP_URLS = { 1:'index.html', 2:'skills.html', 3:'onboard.html', 4:'chat.html' };
 
-    const saved = getSavedWorker();
-    let selectedId = saved?.id || null;
+        const cardsRoot   = document.getElementById('cards');
+        const btnContinue = document.getElementById('btnContinue');
+        document.getElementById('btnTalkSales').onclick = () => openModal('salesModal');
 
-    // Merge saved added apps into WORKERS on boot
-    function hydrateApps(){
-      WORKERS.forEach(w=>{
-        try{
-          const saved = JSON.parse(localStorage.getItem(LS_APPS_PREFIX + w.id) || '[]');
-          if(Array.isArray(saved) && saved.length){
-            const base = new Set([...(w.apps||[]), ...saved]);
+        function openModal(id){ document.getElementById(id).classList.add('show'); }
+        function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+        function getSavedWorker(){ try{ return JSON.parse(localStorage.getItem(LS.WORKER)||'null'); }catch{return null;} }
+        function saveWorker(w){ localStorage.setItem(LS.WORKER, JSON.stringify(w)); }
+
+        const saved = getSavedWorker();
+        let selectedId = saved?.id || null;
+
+        function hydrateApps(){
+            WORKERS.forEach(w=>{
+                try{
+                    const saved = JSON.parse(localStorage.getItem(LS_APPS_PREFIX + w.id) || '[]');
+                    if(Array.isArray(saved) && saved.length){
+                        const base = new Set([...(w.apps||[]), ...saved]);
+                        w.apps = Array.from(base);
+                    }
+                }catch{}
+            });
+        }
+
+        const initials = (txt="") => (txt||"?").trim().slice(0,2).toUpperCase();
+        const pill  = (t,dim=false)=>`<span class="wc-pill ${dim?'dim':''}">${t}</span>`;
+        const niceName = (key)=> key.replace(/[-_]/g,' ').replace(/\b\w/g,m=>m.toUpperCase());
+        const appPath  = (key)=> `icons/${key}.png`;
+
+        function appIcon(key){
+            return `
+                <span class="wc-app">
+                    <img src="${appPath(key)}" alt="${key}"
+                        onerror="this.parentElement.outerHTML='<span class=&quot;wc-app&quot;><span class=&quot;fallback&quot;>${(key||'?').slice(0,2).toUpperCase()}</span></span>'"/>
+                </span>`;
+        }
+
+        function personPhotoSrc(w){
+            const guess = (w.first||w.title||'worker').toLowerCase() + '.png';
+            return { guess, fallback: w.avatar };
+        }
+
+        function cardTemplate(w){
+            const primary = (w.skills14||[]).slice(0,4).map(s=>pill(s)).join("");
+            const extra   = (w.skills14||[]).slice(4,7).map(s=>pill(s,true)).join("");
+
+            const name  = w.first || w.title;
+            const photo = personPhotoSrc(w);
+            const usedBy = w.adoption ? `<div class="used-by">Used by ${w.adoption.toLocaleString()}+ users</div>` : '';
+
+            const appsRow = (w.apps||[]).map(k=>appIcon(k)).join("") +
+                `<button class="app-plus" data-addapps="${w.id}" title="Add apps" aria-label="Add apps to ${name}">+</button>`;
+
+            const roiSection = (w.roi && w.roi.length) ? `
+                <div class="wc-divider" style="margin-top:0px"></div>
+                <div class="wc-badge">ROI</div>
+                <button class="viewroi" data-roi-toggle="${w.id}" style="margin-top:6px">View ROI</button>
+                <div class="wc-roi">
+                    ${w.roi.map(r=>`<div class="kpi">${r}</div>`).join('')}
+                </div>
+            ` : '';
+
+            return `
+            <article class="wc-card ${selectedId===w.id?'is-selected':''}" data-id="${w.id}" aria-roi="false">
+                <header class="wc-toggle">
+                    <img src="${photo.guess}" alt="${name}" class="avatar"
+                        onerror="
+                            if(this.dataset.triedFallback!=='1' && '${photo.fallback||''}'){
+                                this.src='${photo.fallback}'; this.dataset.triedFallback='1';
+                            }else{
+                                const d=document.createElement('div');d.className='avatar';d.style.display='grid';d.style.placeItems='center';d.style.fontWeight='900';d.textContent='${initials(name)}';
+                                this.replaceWith(d);
+                            }
+                        " />
+                    <div class="title-wrap">
+                        <div class="card-title">${name}</div>
+                        <div class="card-desc">${w.desc || ''}</div>
+                    </div>
+                </header>
+
+                <div class="wc-divider"></div>
+                <div class="wc-badge">AI SKILLS</div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">${primary || '<span class="muted">No skills listed</span>'}</div>
+                ${extra ? `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">${extra}</div>` : ''}
+
+                ${w.id!=='custom' ? `
+                    <div style="margin-top:8px">
+                        <button class="btn" data-view="${w.id}">View all skills</button>
+                    </div>` : `
+                    <div class="muted" style="margin-top:8px">Start from templates or design a worker end-to-end.</div>
+                `}
+
+                <div class="wc-divider" style="margin-top:10px"></div>
+                <div class="wc-badge">APPS</div>
+                <div class="logo-row">${appsRow}</div>
+
+                ${roiSection}
+
+                <div class="actions">
+                    <button class="btn primary wide" data-onboard="${w.id}">${w.id==='custom' ? 'Build your dream worker' : 'On-Board'}</button>
+                    ${usedBy}
+                </div>
+            </article>`;
+        }
+
+        function toggleROI(card){
+            const section = card.querySelector('.wc-roi');
+            const btn = card.querySelector('[data-roi-toggle]');
+            if(!section) return;
+            const isOpen = card.getAttribute("aria-roi")==="true";
+            if(isOpen){
+                section.style.height = section.scrollHeight + "px"; section.getBoundingClientRect();
+                section.style.height = "0px"; section.style.opacity = "0";
+                card.setAttribute("aria-roi","false");
+                if(btn) btn.textContent = 'View ROI';
+            } else {
+                section.style.height = "0px"; section.style.opacity = "1";
+                card.setAttribute("aria-roi","true");
+                const target = section.scrollHeight;
+                section.style.height = target + "px";
+                const onEnd=(ev)=>{if(ev.propertyName!=="height") return;
+                    section.style.height="auto";
+                    section.removeEventListener("transitionend", onEnd);
+                };
+                section.addEventListener("transitionend", onEnd);
+                if(btn) btn.textContent = 'Hide ROI';
+            }
+        }
+
+        function renderCards(){
+            cardsRoot.innerHTML = WORKERS.map(cardTemplate).join('');
+            document.querySelectorAll('.wc-card').forEach(card=>{
+                const id = card.getAttribute('data-id');
+
+                card.querySelector(`[data-roi-toggle="${id}"]`)?.addEventListener('click',(e)=>{
+                    e.stopPropagation();
+                    toggleROI(card);
+                });
+
+                card.querySelector('.wc-toggle').addEventListener('click',(e)=>{
+                    e.stopPropagation();
+                    selectWorkerById(id);
+                });
+
+                card.addEventListener('click',(e)=>{
+
+                    if (e.target.closest('button') || e.target.closest('.logo-row')) return;
+                    selectWorkerById(id);
+                });
+
+                card.querySelector(`[data-onboard="${id}"]`)?.addEventListener('click',(e)=>{
+                    e.stopPropagation();
+                    if(id==='custom'){
+                        openModal('customModal'); 
+                        return;
+                    }
+                    selectWorkerById(id);
+                    goToStep2();
+                });
+
+                card.querySelector(`[data-view="${id}"]`)?.addEventListener('click',(e)=>{
+                    e.stopPropagation();
+                    const w = WORKERS.find(x=>x.id===id);
+                    openSkillsModal(w);
+                });
+
+                card.querySelector(`[data-addapps="${id}"]`)?.addEventListener('click',(e)=>{
+                    e.stopPropagation();
+                    openAppsModal(id);
+                });
+            });
+
+            btnContinue.disabled = !selectedId;
+        }
+
+        function selectWorkerById(id){
+            const w = WORKERS.find(x=>x.id===id);
+            if(!w) return;
+            selectedId = w.id;
+
+            const avatarUrl = w.avatar || ((w.first || w.title || 'worker').toLowerCase() + '.png');
+            localStorage.setItem('engini.workerAvatar', JSON.stringify(avatarUrl));
+
+            saveWorker({ id:w.id, name:w.first || w.title || 'AI Worker' });
+            renderCards(); 
+        }
+
+        btnContinue.addEventListener('click', goToStep2);
+        function goToStep2(){
+            if(!selectedId) return;
+            window.location.href = 'skills.html';
+        }
+
+        function openSkillsModal(worker){
+            const body = document.getElementById('skillsBody');
+            const title = document.getElementById('skillsTitle');
+            title.textContent = `${worker.first || worker.title} - All Skills`;
+            const allSkills = worker.skills14 || [];
+            const pillContainer = allSkills.length
+                ? `<div style="display:flex;flex-wrap:wrap;gap:8px;">${allSkills.map(s=>pill(s)).join('')}</div>`
+                : `<p class="muted">No predefined skills. Use the Custom Worker flow in the next step.</p>`;
+            body.innerHTML = pillContainer;
+            openModal('skillsModal');
+        }
+
+        let _appsModalWorkerId = null;
+        let _appsSelected = new Set();
+
+        function openAppsModal(workerId){
+            _appsModalWorkerId = workerId;
+            _appsSelected.clear();
+            document.getElementById("appsTitle").textContent = "Add Apps";
+            document.getElementById("appsSelectionNote").textContent = "0 selected";
+            document.getElementById("appsSearch").value = "";
+            buildAppsGrid();
+            openModal('appsModal');
+        }
+
+        function buildAppsGrid(){
+            const grid = document.getElementById("appsGrid");
+            const w = WORKERS.find(x=>x.id===_appsModalWorkerId);
+            const owned = new Set([...(w.apps||[])]);
+
+            const query = document.getElementById("appsSearch").value.trim().toLowerCase();
+            const list = AVAILABLE_APPS.filter(k=>{
+                if(owned.has(k)) return false;
+                if(!query) return true;
+                const display = k.toLowerCase().replace(/[-_]/g,' ');
+                return k.includes(query) || display.includes(query);
+            });
+
+            grid.innerHTML = list.map(k=>`
+                <div class="app-tile" data-app="${k}">
+                    <img src="${appPath(k)}" alt="${k}" onerror="this.style.display='none'"/>
+                    <div class="app-name">${niceName(k)}</div>
+                </div>
+            `).join("");
+
+            grid.querySelectorAll(".app-tile").forEach(tile=>{
+                tile.addEventListener("click", ()=>{
+                    const key = tile.getAttribute("data-app");
+                    if(_appsSelected.has(key)){ _appsSelected.delete(key); tile.classList.remove("selected"); }
+                    else { _appsSelected.add(key); tile.classList.add("selected"); }
+                    document.getElementById("appsSelectionNote").textContent = `${_appsSelected.size} selected`;
+                });
+            });
+        }
+
+        document.getElementById("appsSearch").addEventListener("input", buildAppsGrid);
+
+        document.getElementById("appsAddBtn").addEventListener("click", ()=>{
+            if(!_appsModalWorkerId || _appsSelected.size===0){ closeModal('appsModal'); return; }
+            const w = WORKERS.find(x=>x.id===_appsModalWorkerId);
+            if(!w) return;
+
+            const base = new Set(w.apps || []);
+            _appsSelected.forEach(k=> base.add(k));
             w.apps = Array.from(base);
-          }
-        }catch{}
-      });
-    }
 
-    // same JS as you pasted — but cardTemplate changed:
-    function cardTemplate(w){
-      const primary = (w.skills14||[]).slice(0,4).map(s=>`<span class="wc-pill">${s}</span>`).join("");
-      const extra   = (w.skills14||[]).slice(4,7).map(s=>`<span class="wc-pill dim">${s}</span>`).join("");
-      const name  = w.first || w.title;
-      const usedBy = w.adoption ? `<div class="used-by">Used by ${w.adoption.toLocaleString()}+ users</div>` : '';
-      const appsRow = (w.apps||[]).map(k=>`<span class="wc-app"><img src="icons/${k}.png" alt="${k}"/></span>`).join("")+
-        `<button class="app-plus" data-addapps="${w.id}">+</button>`;
-        
-const roiSection = `
-  <div class="roi-section">
-    ${w.roi && w.roi.length ? `
-      <div class="wc-divider"></div>
-      <div class="wc-badge">ROI</div>
-      <button class="viewroi" data-roi-toggle="${w.id}">View ROI</button>
-      <div class="wc-roi">${w.roi.map(r => `<div class="kpi">${r}</div>`).join('')}</div>
-    ` : `
-      <div class="viewroi placeholder" disabled>ROI not available</div>
-    `}
-  </div>
-`;
-const appsSection = `
-  <div class="apps-row">
-    ${w.apps.map(app => `<img src="icons/${app}.png" alt="${app}" class="app-icon">`).join('')}
-  </div>
-`;
+            try{
+                const existing = JSON.parse(localStorage.getItem(LS_APPS_PREFIX + w.id) || '[]');
+                const merged = Array.from(new Set([...(existing||[]), ...Array.from(_appsSelected)]));
+                localStorage.setItem(LS_APPS_PREFIX + w.id, JSON.stringify(merged));
+            }catch{}
 
-
-      return `
-      <article class="wc-card" data-id="${w.id}" aria-expanded="false" aria-roi="false">
-        <div class="card-body">
-          <header class="wc-toggle">
-            <img src="${w.avatar}" class="avatar"/>
-<div class="wc-top">
-  <div class="title-wrap">
-    <div class="card-title">${name}</div>
-    <div class="card-desc">${w.desc || ''}</div>
-  </div>
-</div>
-
-
-          </header>
-          <div class="wc-divider"></div>
-          <div class="wc-badge">AI SKILLS</div>
-          <div style="display:flex;flex-wrap:wrap;gap:18px;margin-top:6px">${primary || '<span class="muted">No skills listed</span>'}</div>
-          ${extra ? `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">${extra}</div>` : ''}
-          ${roiSection}
-          <div class="wc-divider" style="margin-top:10px"></div>
-          <div class="wc-badge">APPS</div>
-          <div class="logo-row">${appsRow}</div>
-        </div>
- <div class="actions">
-  <div class="button-group">
-    <button class="viewroi" data-roi-toggle="${w.id}">View ROI</button>
-    <button class="btn primary wide" data-onboard="${w.id}">On-Board</button>
-  </div>
-  ${usedBy}
-</div>
-      </article>`;
-    }
-    // helpers
-    const initials = (txt="") => (txt||"?").trim().slice(0,2).toUpperCase();
-    const pill  = (t,dim=false)=>`<span class="wc-pill ${dim?'dim':''}">${t}</span>`;
-    const niceName = (key)=> key.replace(/[-_]/g,' ').replace(/\b\w/g,m=>m.toUpperCase());
-    const appPath  = (key)=> `icons/${key}.png`;
-
-    function appIcon(key){
-      return `
-        <span class="wc-app">
-          <img src="${appPath(key)}" alt="${key}"
-               onerror="this.parentElement.outerHTML='<span class=&quot;wc-app&quot;><span class=&quot;fallback&quot;>${(key||'?').slice(0,2).toUpperCase()}</span></span>'"/>
-        </span>`;
-    }
-
-    function personPhotoSrc(w){
-      const guess = (w.first||w.title||'worker').toLowerCase() + '.png';
-      return { guess, fallback: w.avatar };
-    }
-
-    function cardTemplate(w){
-      const primary = (w.skills14||[]).slice(0,4).map(s=>pill(s)).join("");
-      const extra   = (w.skills14||[]).slice(4,7).map(s=>pill(s,true)).join("");
-
-      const name  = w.first || w.title;
-      const photo = personPhotoSrc(w);
-      const usedBy = w.adoption ? `<div class="used-by">Used by ${w.adoption.toLocaleString()}+ users</div>` : '';
-
-      const appsRow = (w.apps||[]).map(k=>appIcon(k)).join("") +
-        `<button class="app-plus" data-addapps="${w.id}" title="Add apps" aria-label="Add apps to ${name}">+</button>`;
-
-      // ROI section (scoped to this card)
-      const roiSection = (w.roi && w.roi.length) ? `
-        <div class="wc-divider" style="margin-top:0px"></div>
-        <div class="wc-badge">ROI</div>
-        <button class="viewroi" data-roi-toggle="${w.id}" style="margin-top:6px">View ROI</button>
-        <div class="wc-roi">
-          ${w.roi.map(r=>`<div class="kpi">${r}</div>`).join('')}
-        </div>
-      ` : '';
-
-      return `
-      <article class="wc-card ${selectedId===w.id?'is-selected':''}" data-id="${w.id}" aria-expanded="false" aria-roi="false">
-        <header class="wc-toggle">
-          <img src="${photo.guess}" alt="${name}" class="avatar"
-               onerror="
-                 if(this.dataset.triedFallback!=='1' && '${photo.fallback||''}'){
-                   this.src='${photo.fallback}'; this.dataset.triedFallback='1';
-                 }else{
-                   const d=document.createElement('div');d.className='avatar';d.style.display='grid';d.style.placeItems='center';d.style.fontWeight='900';d.textContent='${initials(name)}';
-                   this.replaceWith(d);
-                 }
-               " />
-          <div class="title-wrap">
-            <div class="card-title">${name}</div>
-            <div class="card-desc">${w.desc || ''}</div>
-          </div>
-
-        </header>
-
-        <div class="wc-divider"></div>
-        <div class="wc-badge">AI SKILLS</div>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">${primary || '<span class="muted">No skills listed</span>'}</div>
-        ${extra ? `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">${extra}</div>` : ''}
-
-        ${w.id!=='custom' ? `
-          <div style="margin-top:8px">
-            <button class="btn" data-view="${w.id}">View all skills</button>
-          </div>` : `
-          <div class="muted" style="margin-top:8px">Start from templates or design a worker end-to-end.</div>
-        `}
-
-        <div class="wc-divider" style="margin-top:10px"></div>
-        <div class="wc-badge">APPS</div>
-        <div class="logo-row">${appsRow}</div>
-
-        <!-- legacy KPIs inline (kept but hidden)
-        <div class="kpis">${(w.roi||[]).map(k=>`<div class="kpi">${k}</div>`).join('')}</div>
-        -->
-        ${roiSection}
-
-        <div class="actions">
-          <button class="btn primary wide" data-onboard="${w.id}">${w.id==='custom' ? 'Build your dream worker' : 'On-Board'}</button>
-          ${usedBy}
-        </div>
-
-        <section class="wc-more" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line)">
-          <p class="muted" style="margin:0 0 6px">${w.more?.summary || '—'}</p>
-          ${(w.more?.playbooks?.length
-            ? `<div style="margin-top:8px">
-                 <div class="wc-badge" style="margin-bottom:6px">Playbooks</div>
-                 <div style="display:flex;flex-wrap:wrap;gap:8px">
-                   ${(w.more.playbooks||[]).map(p=>pill(p)).join('')}
-                 </div>
-               </div>` : ''
-          )}
-        </section>
-      </article>`;
-    }
-
-    function toggleROI(card){
-      const section = card.querySelector('.wc-roi');
-      const btn = card.querySelector('[data-roi-toggle]');
-      if(!section) return;
-      const isOpen = card.getAttribute("aria-roi")==="true";
-      if(isOpen){
-        section.style.height = section.scrollHeight + "px"; section.getBoundingClientRect();
-        section.style.height = "0px"; section.style.opacity = "0";
-        card.setAttribute("aria-roi","false");
-        if(btn) btn.textContent = 'View ROI';
-      } else {
-        section.style.height = "0px"; section.style.opacity = "1";
-        card.setAttribute("aria-roi","true");
-        const target = section.scrollHeight;
-        section.style.height = target + "px";
-        const onEnd=(ev)=>{if(ev.propertyName!=="height") return;
-          section.style.height="auto";
-          section.removeEventListener("transitionend", onEnd);
-        };
-        section.addEventListener("transitionend", onEnd);
-        if(btn) btn.textContent = 'Hide ROI';
-      }
-    }
-
-    function renderCards(){
-      cardsRoot.innerHTML = WORKERS.map(cardTemplate).join('');
-      document.querySelectorAll('.wc-card').forEach(card=>{
-        const id = card.getAttribute('data-id');
-        const section = card.querySelector('.wc-more');
-        const header  = card.querySelector('.wc-toggle');
-
-        // ROI toggle
-        card.querySelector(`[data-roi-toggle="${id}"]`)?.addEventListener('click',(e)=>{
-          e.stopPropagation();
-          toggleROI(card);
+            closeModal('appsModal');
+            renderCards();
         });
 
-        // collapsed initial for "more"
-        section.style.height = "0px"; section.style.opacity = "0";
+        const cwName  = document.getElementById('cwName');
+        const cwDesc  = document.getElementById('cwDesc');
+        const cwCreate= document.getElementById('cwCreate');
 
-        header.addEventListener('click',(e)=>{
-          e.stopPropagation();
-          toggleExpand(card, section);
+        cwCreate.addEventListener('click', ()=>{
+            const name = (cwName.value || 'Custom Worker').trim();
+            const desc = (cwDesc.value || 'Tailored to your stack.').trim();
+
+            const w = WORKERS.find(x=>x.id==='custom');
+            if(w){
+                w.first = name;
+                w.desc  = desc;
+
+                try{ localStorage.removeItem(LS_APPS_PREFIX + 'custom'); }catch{}
+            }
+
+            const avatarUrl = w.avatar || 'custom.png';
+            localStorage.setItem('engini.workerAvatar', JSON.stringify(avatarUrl));
+            selectedId = 'custom';
+            saveWorker({ id:'custom', name });
+
+            closeModal('customModal');
+            goToStep2();
         });
 
-        // Select card when clicking empty area
-        card.addEventListener('click',(e)=>{
-          if (e.target.closest('button') || e.target.closest('.wc-toggle') || e.target.closest('.logo-row')) return;
-          selectWorkerById(id);
+        function setActiveProgressByPath(){
+            const path = (location.pathname || '').toLowerCase();
+            let step = 1;
+            if (path.includes('skills')) step = 2;
+            else if (path.includes('onboard')) step = 3;
+            else if (path.includes('workspace')) step = 4;
+            document.querySelectorAll('.progress [data-step]').forEach(el=>{
+                el.classList.toggle('active', Number(el.dataset.step) === step);
+            });
+        }
+
+        function wireProgressNav(){
+            document.querySelectorAll('.progress [data-step]').forEach(el=>{
+                el.addEventListener('click', ()=>{
+                    const step = Number(el.dataset.step);
+
+                    if ((step >= 2) && !selectedId){
+                        alert('Please select a worker first.');
+                        return;
+                    }
+                    const url = STEP_URLS[step] || 'index.html';
+                    window.location.href = url;
+                });
+            });
+        }
+
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        const brandLogo = document.getElementById('brandLogo');
+
+        function updateLogo(isDark) {
+            brandLogo.src = isDark ? 'logo_light.png' : 'logo.png';
+        }
+
+        const isDarkInitial = localStorage.getItem('theme') === 'dark';
+        if (isDarkInitial) {
+            html.classList.add('dark-mode');
+            themeToggle.textContent = 'Light Mode';
+        }
+        updateLogo(isDarkInitial);
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark-mode');
+            const isDark = html.classList.contains('dark-mode');
+
+            themeToggle.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+
+            updateLogo(isDark);
         });
 
-        // On-Board
-        card.querySelector(`[data-onboard="${id}"]`)?.addEventListener('click',(e)=>{
-          e.stopPropagation();
-          if(id==='custom'){
-            openModal('customModal'); // create custom worker first
-            return;
-          }
-          selectWorkerById(id);
-          goToStep2();
-        });
-
-        // View all skills
-        card.querySelector(`[data-view="${id}"]`)?.addEventListener('click',(e)=>{
-          e.stopPropagation();
-          const w = WORKERS.find(x=>x.id===id);
-          openSkillsModal(w);
-        });
-
-        // Add apps (plus tile)
-        card.querySelector(`[data-addapps="${id}"]`)?.addEventListener('click',(e)=>{
-          e.stopPropagation();
-          openAppsModal(id);
-        });
-      });
-
-      btnContinue.disabled = !selectedId;
-    }
-
-    function toggleExpand(card,section){
-      const isOpen = card.getAttribute("aria-expanded")==="true";
-      if(isOpen){
-        section.style.height = section.scrollHeight + "px"; section.getBoundingClientRect();
-        section.style.height = "0px"; section.style.opacity = "0"; card.setAttribute("aria-expanded","false");
-      }else{
-        section.style.height = "0px"; section.style.opacity = "1"; card.setAttribute("aria-expanded","true");
-        const target = section.scrollHeight; section.style.height = target + "px";
-        const onEnd=(ev)=>{if(ev.propertyName!=="height") return; section.style.height="auto"; section.removeEventListener("transitionend", onEnd);};
-        section.addEventListener("transitionend", onEnd);
-      }
-    }
-
-    function selectWorkerById(id){
-      const w = WORKERS.find(x=>x.id===id);
-      if(!w) return;
-      selectedId = w.id;
-
-      // save avatar for the skills page to inherit
-      const avatarUrl = w.avatar || ((w.first || w.title || 'worker').toLowerCase() + '.png');
-      localStorage.setItem('engini.workerAvatar', JSON.stringify(avatarUrl));
-
-      saveWorker({ id:w.id, name:w.first || w.title || 'AI Worker' });
-      renderCards();
-    }
-
-    btnContinue.addEventListener('click', goToStep2);
-    function goToStep2(){
-      if(!selectedId) return;
-      window.location.href = 'skills.html';
-    }
-
-    // View all skills modal (pills)
-    function openSkillsModal(worker){
-      const body = document.getElementById('skillsBody');
-      const title = document.getElementById('skillsTitle');
-      title.textContent = `${worker.first || worker.title} - All Skills`;
-      const allSkills = worker.skills14 || [];
-      body.innerHTML = allSkills.length
-        ? `<div style="display:flex;flex-wrap:wrap;gap:8px;">${allSkills.map(s=>pill(s)).join('')}</div>`
-        : `<p class="muted">No predefined skills. Use the Custom Worker flow in the next step.</p>`;
-      openModal('skillsModal');
-    }
-
-    // ===== Apps Picker =====
-    let _appsModalWorkerId = null;
-    let _appsSelected = new Set();
-
-    function openAppsModal(workerId){
-      _appsModalWorkerId = workerId;
-      _appsSelected.clear();
-      document.getElementById("appsTitle").textContent = "Add Apps";
-      document.getElementById("appsSelectionNote").textContent = "0 selected";
-      document.getElementById("appsSearch").value = "";
-      buildAppsGrid();
-      openModal('appsModal');
-    }
-
-    function buildAppsGrid(){
-      const grid = document.getElementById("appsGrid");
-      const w = WORKERS.find(x=>x.id===_appsModalWorkerId);
-      const owned = new Set([...(w.apps||[])]);
-
-      const query = document.getElementById("appsSearch").value.trim().toLowerCase();
-      const list = AVAILABLE_APPS.filter(k=>{
-        if(owned.has(k)) return false;
-        if(!query) return true;
-        const display = k.toLowerCase().replace(/[-_]/g,' ');
-        return k.includes(query) || display.includes(query);
-      });
-
-      grid.innerHTML = list.map(k=>`
-        <div class="app-tile" data-app="${k}">
-          <img src="${appPath(k)}" alt="${k}" onerror="this.style.display='none'"/>
-          <div class="app-name">${niceName(k)}</div>
-        </div>
-      `).join("");
-
-      grid.querySelectorAll(".app-tile").forEach(tile=>{
-        tile.addEventListener("click", ()=>{
-          const key = tile.getAttribute("data-app");
-          if(_appsSelected.has(key)){ _appsSelected.delete(key); tile.classList.remove("selected"); }
-          else { _appsSelected.add(key); tile.classList.add("selected"); }
-          document.getElementById("appsSelectionNote").textContent = `${_appsSelected.size} selected`;
-        });
-      });
-    }
-
-    document.getElementById("appsSearch").addEventListener("input", buildAppsGrid);
-
-    document.getElementById("appsAddBtn").addEventListener("click", ()=>{
-      if(!_appsModalWorkerId || _appsSelected.size===0){ closeModal('appsModal'); return; }
-      const w = WORKERS.find(x=>x.id===_appsModalWorkerId);
-      if(!w) return;
-
-      const base = new Set(w.apps || []);
-      _appsSelected.forEach(k=> base.add(k));
-      w.apps = Array.from(base);
-
-      try{
-        const existing = JSON.parse(localStorage.getItem(LS_APPS_PREFIX + w.id) || '[]');
-        const merged = Array.from(new Set([...(existing||[]), ...Array.from(_appsSelected)]));
-        localStorage.setItem(LS_APPS_PREFIX + w.id, JSON.stringify(merged));
-      }catch{}
-
-      closeModal('appsModal');
-      renderCards();
-    });
-
-    // ===== Custom Worker flow =====
-    const cwName  = document.getElementById('cwName');
-    const cwDesc  = document.getElementById('cwDesc');
-    const cwCreate= document.getElementById('cwCreate');
-
-    cwCreate.addEventListener('click', ()=>{
-      const name = (cwName.value || 'Custom Worker').trim();
-      const desc = (cwDesc.value || 'Tailored to your stack.').trim();
-
-      // Update the "custom" worker in-memory, save selection, continue
-      const w = WORKERS.find(x=>x.id==='custom');
-      if(w){
-        w.first = name;
-        w.desc  = desc;
-        // Reset any prior custom apps/skills if needed
-        try{ localStorage.removeItem(LS_APPS_PREFIX + 'custom'); }catch{}
-      }
-
-      // Save avatar + selection for skills page
-      const avatarUrl = w.avatar || 'custom.png';
-      localStorage.setItem('engini.workerAvatar', JSON.stringify(avatarUrl));
-      selectedId = 'custom';
-      saveWorker({ id:'custom', name });
-
-      closeModal('customModal');
-      goToStep2();
-    });
-
-    // ---- Progress Bar Navigation (clickable steps) ----
-    function setActiveProgressByPath(){
-      const path = (location.pathname || '').toLowerCase();
-      let step = 1;
-      if (path.includes('skills')) step = 2;
-      else if (path.includes('onboard')) step = 3;
-      else if (path.includes('workspace')) step = 4;
-      document.querySelectorAll('.progress [data-step]').forEach(el=>{
-        el.classList.toggle('active', Number(el.dataset.step) === step);
-      });
-    }
-
-    function wireProgressNav(){
-      document.querySelectorAll('.progress [data-step]').forEach(el=>{
-        el.addEventListener('click', ()=>{
-          const step = Number(el.dataset.step);
-          // Guard: must have a selected worker before moving forward from step 1 on this page.
-          if ((step >= 2) && !selectedId){
-            alert('Please select a worker first.');
-            return;
-          }
-          const url = STEP_URLS[step] || 'index.html';
-          window.location.href = url;
-        });
-      });
-    }
-
-    // Boot
-    (function init(){
-      hydrateApps();
-      renderCards();
-      setActiveProgressByPath();
-      wireProgressNav();
-    })();
-
-  </script>
+        (function init(){
+            hydrateApps();
+            renderCards();
+            setActiveProgressByPath();
+            wireProgressNav();
+        })();
+    </script>
 </body>
 </html>
