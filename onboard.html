@@ -7,12 +7,13 @@
     <link rel="icon" type="image/png" href="image.png"/>
     <link rel="stylesheet" href="style.css">
     <style>
-          .btn{
+        .btn,.cta-sales{
             height:36px;padding:0 14px;border-radius:10px;
             border:1px solid var(--line);background:var(--card);color:var(--ink);
             font-weight:600; 
             cursor:pointer;transition:box-shadow .2s,border-color .2s,background .2s
         }
+
         .h1 { font-size: 30px; line-height: 1.2; margin: 22px 0 6px; }
         .lead { max-width: 720px; margin: 0 auto 12px; text-align: center; }
         .muted { color: var(--muted); }
@@ -104,7 +105,12 @@
         .brand { font-weight: 700; }
         .progress { font-weight: 700; }
         .header-actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
-       
+         .header .progress {
+            font-weight: 500; 
+                }
+        .header .progress .active {
+             font-weight: 600; 
+        }
     </style>
 </head>
 <body>

@@ -7,6 +7,12 @@
     <link rel="icon" type="image/png" href="image.png"/>
     <link rel="stylesheet" href="style.css">
     <style>
+      .btn,.cta-sales{
+            height:36px;padding:0 14px;border-radius:10px;
+            border:1px solid var(--line);background:var(--card);color:var(--ink);
+            font-weight:600; 
+            cursor:pointer;transition:box-shadow .2s,border-color .2s,background .2s
+        }
 
         .workspace {
             display: grid;
@@ -283,7 +289,14 @@
         .modal .ok { background: var(--primary); color: var(--primary-ink); border: 1px solid var(--primary); height: 38px; border-radius: 10px; padding: 0 14px; font-weight: 700; }
         .modal .row { display: flex; gap: 10px; }
         .modal .row-between{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-top:1px solid var(--line)}
-    </style>
+   
+     .header .progress {
+            font-weight: 500; 
+                }
+        .header .progress .active {
+             font-weight: 600; 
+        }
+   </style>
 </head>
 <body>
     <header class="header">
@@ -302,7 +315,7 @@
             </div>
 
             <div class="header-actions">
-                <button class="cta-sales" id="btnTalkSales" type="button">Talk to Sales</button>
+                <button class="btn" id="btnTalkSales" type="button">Talk to Sales</button>
                 <button class="btn" id="themeToggle" type="button">Dark mode</button>
             </div>
         </div>
@@ -313,7 +326,7 @@
             <div class="chat-head">
                 <div>
                     <div class="title" id="chatTitle">Chat with Worker</div>
-                    <div class="muted" id="chatSubtitle">Demo Mode — connect systems to go live</div>
+                    <div class="muted" id="chatSubtitle">connect systems to go live</div>
                 </div>
                 <div class="header-actions">
                     <button id="btnConnect" class="btn">Connect systems</button>
@@ -348,13 +361,13 @@
                 <div class="section-title">Selected Skills</div>
                 <div class="badges" id="skillsBadges" style="margin-bottom:6px"></div>
                 <div class="scroll" style="max-height:180px;overflow:auto">
-                    <ul id="skillsList" class="list"></ul>
+
                 </div>
 
                 <hr class="hr">
                 <div class="section-title">Connections</div>
                 <div class="badges" id="connBadges"></div>
-                <div class="help">Use “Connect systems” to add ERP/CRM/HRIS/ITSM/DB/Files. Saved in browser for demo.</div>
+                <div class="help">Use “Connect systems” to add ERP/CRM/HRIS/ITSM/DB/Files.</div>
 
                 <hr class="hr">
                 <a class="btn" href="skills.html" style="width:100%">Manage Skills</a>
@@ -550,7 +563,7 @@
 
           
             document.getElementById('skillsBadges').innerHTML = selSkills.map(s => `<span class="badge">${s}</span>`).join('');
-            document.getElementById('skillsList').innerHTML = selSkills.map(s => `<li>${s}</li>`).join('');
+
 
        
             if (!chat.length) {
