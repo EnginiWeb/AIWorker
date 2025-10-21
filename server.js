@@ -18,7 +18,7 @@ app.get("/api/ping", (req, res) => {
   res.json({ ok: true, ts: Date.now() });
 });
 
-const GEMINI_KEY = "AIzaSyCbHgy-FUyNrRQebd78QIJR0roVlbx4HbM";
+const GEMINI_KEY = "-";
 
 
 app.post("/api/chat", async (req, res) => {
@@ -54,3 +54,4 @@ const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });
+
